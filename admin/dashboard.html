@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — CampusX</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link active"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+
+        <div>
+          <div class="sidebar-section-title">Directory Management</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="users.html" class="nav-link"><i>👥</i> <span>All Users</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👨‍🎓</i> <span>Students</span></a></li>
+            <li><a href="teachers.html" class="nav-link"><i>👨‍🏫</i> <span>Faculty</span></a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sidebar-section-title">Curriculum & Campus</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="departments.html" class="nav-link"><i>🏛️</i> <span>Departments</span></a></li>
+            <li><a href="subjects.html" class="nav-link"><i>📖</i> <span>Subjects</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="content.html" class="nav-link"><i>📁</i> <span>Content Moderation</span></a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sidebar-section-title">Administration</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="settings.html" class="nav-link"><i>⚙️</i> <span>Platform Settings</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <span class="text-xs text-muted">CampusX Administrator Portal</span>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Institution Administration Overview</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #ef4444, #dc2626);">AD</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Admin</span>
+              <span class="user-role-badge">ADMIN</span>
+            </div>
+            <div class="user-dropdown">
+              <a href="settings.html" class="user-dropdown-item">⚙️ Settings</a>
+              <div class="user-dropdown-divider"></div>
+              <a href="javascript:void(0)" class="user-dropdown-item logout-btn" style="color: var(--danger);">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Banner -->
+        <div class="welcome-banner" style="background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #ef4444 100%);">
+          <div class="welcome-text">
+            <h2>Campus Command Center 👋</h2>
+            <p>Full administrative authority over college departments, academic curriculum, user credentials, and institution-wide compliance.</p>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap primary">👨‍🎓</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="adminTotalStudents">--</span>
+              <span class="kpi-label">Total Students</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap warning">👨‍🏫</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="adminTotalTeachers">--</span>
+              <span class="kpi-label">Faculty Members</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap secondary">📖</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="adminTotalSubjects">--</span>
+              <span class="kpi-label">Academic Subjects</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap success">📚</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="adminTotalNotes">--</span>
+              <span class="kpi-label">Curriculum Notes</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap info">📝</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="adminTotalAssignments">--</span>
+              <span class="kpi-label">Assignments</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap danger">📢</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="adminTotalNotices">--</span>
+              <span class="kpi-label">College Notices</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">👥 Recently Registered Platform Users</h3>
+                <p class="card-subtitle">Students, instructors, and staff registered in Firestore</p>
+              </div>
+              <a href="users.html" class="btn btn-outline btn-sm">Manage Users →</a>
+            </div>
+            <div id="adminRecentUsersTable">
+              <div class="skeleton skeleton-card" style="height: 140px;"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">⚡ Quick Management Controls</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <a href="users.html" class="btn btn-primary w-full" style="justify-content: flex-start;">
+                <span>👥 User Directory & Role Assignment</span>
+              </a>
+              <a href="departments.html" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>🏛️ Manage Academic Departments</span>
+              </a>
+              <a href="subjects.html" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>📖 Manage Subjects & Course Curriculum</span>
+              </a>
+              <a href="timetable.html" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>📅 Manage Timetable & Class Schedules</span>
+              </a>
+              <a href="settings.html" class="btn btn-outline w-full" style="justify-content: flex-start;">
+                <span>⚡ 1-Click Firestore Data Seeder</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      AdminController.initDashboard();
+    });
+  </script>
+</body>
+</html>

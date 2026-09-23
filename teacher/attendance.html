@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Manager — CampusX Faculty</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academic Content</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Notes Manager</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Communication</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Classroom</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="attendance.html" class="nav-link active"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>My Schedule</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👥</i> <span>Students Roster</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Attendance Manager</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Faculty</span>
+              <span class="user-role-badge">TEACHER</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+
+        <!-- Session Filter Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header" style="margin-bottom: 1rem;">
+            <div>
+              <h3 class="card-title">Select Class Session</h3>
+              <p class="card-subtitle">Choose the class details, then load students to mark attendance</p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Department <span class="required">*</span></label>
+              <select id="attDeptSelect" class="form-control form-select">
+                <option value="">Select Department</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Semester <span class="required">*</span></label>
+              <select id="attSemSelect" class="form-control form-select">
+                <option value="">Select Semester</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Section <span class="required">*</span></label>
+              <select id="attSectionSelect" class="form-control form-select">
+                <option value="">Select Section</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Subject <span class="required">*</span></label>
+              <select id="attSubjectSelect" class="form-control form-select">
+                <option value="">Select Subject</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Date <span class="required">*</span></label>
+              <input type="date" id="attDateInput" class="form-control">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Period / Time <span class="required">*</span></label>
+              <select id="attPeriodSelect" class="form-control form-select">
+                <option value="">Select Period</option>
+                <option value="08:00-09:00">08:00 – 09:00</option>
+                <option value="09:00-10:00">09:00 – 10:00</option>
+                <option value="10:00-11:00">10:00 – 11:00</option>
+                <option value="11:00-12:00">11:00 – 12:00</option>
+                <option value="12:00-13:00">12:00 – 13:00</option>
+                <option value="13:00-14:00">13:00 – 14:00 (Lunch)</option>
+                <option value="14:00-15:00">14:00 – 15:00</option>
+                <option value="15:00-16:00">15:00 – 16:00</option>
+                <option value="16:00-17:00">16:00 – 17:00</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button id="loadStudentsBtn" class="btn btn-primary" onclick="loadStudents()">
+              📋 Load Students
+            </button>
+          </div>
+        </div>
+
+        <!-- Attendance Sheet -->
+        <div id="attendanceSheetCard" class="card" style="display:none;">
+          <div class="card-header" style="margin-bottom: 1rem;">
+            <div>
+              <h3 class="card-title" id="attendanceSheetTitle">Attendance Sheet</h3>
+              <p class="card-subtitle" id="attendanceSheetSubtitle"></p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" onclick="markAll('present')">✅ Mark All Present</button>
+              <button class="btn btn-outline btn-sm" onclick="markAll('absent')">❌ Mark All Absent</button>
+            </div>
+          </div>
+
+          <!-- Summary pills -->
+          <div id="attSummaryRow" style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;"></div>
+
+          <div class="table-container" style="margin-bottom: 1rem;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student Name</th>
+                  <th>Roll / Enroll No.</th>
+                  <th style="text-align: center;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceSheetBody"></tbody>
+            </table>
+          </div>
+
+          <div id="existingSessionNote" class="card" style="display:none; border-left: 4px solid var(--warning); background: var(--surface); margin-bottom: 1rem; padding: 0.75rem 1rem;">
+            <p class="text-sm" style="color: var(--warning);">⚠️ Attendance for this session already exists. Saving will overwrite the previous records.</p>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button class="btn btn-secondary" onclick="resetSheet()">Reset</button>
+            <button id="saveAttendanceBtn" class="btn btn-primary" onclick="saveAttendance()">
+              💾 Save Attendance
+            </button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/attendance.js"></script>
+
+  <script>
+    // State
+    let _students    = [];
+    let _attendanceMap = {};  // { [uid]: "present"|"absent" }
+    let _sessionExists = false;
+    let _currentUser = null;
+
+    // ── Boot ─────────────────────────────────────────────────────────────────
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Set today's date as default
+      document.getElementById("attDateInput").value = new Date().toISOString().split("T")[0];
+
+      // Load departments from Firestore
+      await loadDepartments();
+      // Load subjects
+      await loadSubjects();
+
+      // Wait for auth to resolve
+      _currentUser = await new Promise(resolve => {
+        const unsub = window.auth.onAuthStateChanged(u => { unsub(); resolve(u); });
+      });
+    });
+
+    async function loadDepartments() {
+      try {
+        const snapshot = await window.db.collection("departments").get();
+        const sel = document.getElementById("attDeptSelect");
+        snapshot.docs.forEach(doc => {
+          const d = doc.data();
+          const opt = document.createElement("option");
+          opt.value = doc.id;
+          opt.textContent = d.name || doc.id;
+          sel.appendChild(opt);
+        });
+      } catch (e) {
+        console.warn("[Attendance] Could not load departments:", e);
+      }
+    }
+
+    async function loadSubjects() {
+      try {
+        const snapshot = await window.db.collection("subjects").get();
+        const sel = document.getElementById("attSubjectSelect");
+        snapshot.docs.forEach(doc => {
+          const d = doc.data();
+          const opt = document.createElement("option");
+          opt.value = doc.id;
+          opt.textContent = d.name || doc.id;
+          sel.appendChild(opt);
+        });
+      } catch (e) {
+        console.warn("[Attendance] Could not load subjects:", e);
+      }
+    }
+
+    // ── Load Students ────────────────────────────────────────────────────────
+
+    async function loadStudents() {
+      const department = document.getElementById("attDeptSelect").value;
+      const semester   = document.getElementById("attSemSelect").value;
+      const section    = document.getElementById("attSectionSelect").value;
+      const subjectId  = document.getElementById("attSubjectSelect").value;
+      const date       = document.getElementById("attDateInput").value;
+      const period     = document.getElementById("attPeriodSelect").value;
+
+      if (!department || !semester || !section || !subjectId || !date || !period) {
+        showToast("Please fill all session fields before loading students.", "danger");
+        return;
+      }
+
+      const btn = document.getElementById("loadStudentsBtn");
+      btn.disabled = true;
+      btn.textContent = "Loading…";
+
+      try {
+        // Fetch students for this class
+        _students = await AttendanceService.getStudentsForClass({ department, semester, section });
+
+        if (_students.length === 0) {
+          showToast("No active students found for this department/semester/section.", "warning");
+          btn.disabled = false;
+          btn.textContent = "📋 Load Students";
+          return;
+        }
+
+        // Check for existing session
+        const subjectName = document.getElementById("attSubjectSelect").options[
+          document.getElementById("attSubjectSelect").selectedIndex
+        ].text;
+        const deptName = document.getElementById("attDeptSelect").options[
+          document.getElementById("attDeptSelect").selectedIndex
+        ].text;
+
+        const existing = await AttendanceService.getSessionRecords({
+          department, semester, section, subjectId, date, period
+        });
+
+        _sessionExists = existing.length > 0;
+        _attendanceMap = {};
+
+        if (_sessionExists) {
+          // Pre-fill from existing records
+          existing.forEach(rec => {
+            _attendanceMap[rec.studentId] = rec.status;
+          });
+          document.getElementById("existingSessionNote").style.display = "block";
+        } else {
+          // Default all to absent
+          _students.forEach(s => { _attendanceMap[s.uid] = "absent"; });
+          document.getElementById("existingSessionNote").style.display = "none";
+        }
+
+        // Render the sheet
+        document.getElementById("attendanceSheetTitle").textContent =
+          `${sanitizeHtml(subjectName)} — ${date} (${period})`;
+        document.getElementById("attendanceSheetSubtitle").textContent =
+          `${sanitizeHtml(deptName)} | Semester ${semester} | Section ${section} | ${_students.length} students`;
+
+        renderSheet();
+        document.getElementById("attendanceSheetCard").style.display = "block";
+        document.getElementById("attendanceSheetCard").scrollIntoView({ behavior: "smooth" });
+
+      } catch (e) {
+        console.error(e);
+        showToast(e.message || "Failed to load students", "danger");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📋 Load Students";
+      }
+    }
+
+    // ── Render Sheet ─────────────────────────────────────────────────────────
+
+    function renderSheet() {
+      const tbody = document.getElementById("attendanceSheetBody");
+      let rows = "";
+      _students.forEach((s, i) => {
+        const status = _attendanceMap[s.uid] || "absent";
+        rows += `
+          <tr id="row_${s.uid}">
+            <td class="text-muted text-xs">${i + 1}</td>
+            <td class="font-semibold">${sanitizeHtml(s.displayName)}</td>
+            <td class="text-xs text-muted">${sanitizeHtml(s.rollNumber || "—")}</td>
+            <td style="text-align: center;">
+              <div style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                <button
+                  class="btn btn-sm ${status === 'present' ? 'btn-primary' : 'btn-outline'}"
+                  onclick="toggleStatus('${s.uid}', 'present')"
+                  id="btn_present_${s.uid}"
+                  style="min-width: 90px;"
+                >✅ Present</button>
+                <button
+                  class="btn btn-sm ${status === 'absent' ? 'btn-danger' : 'btn-outline'}"
+                  onclick="toggleStatus('${s.uid}', 'absent')"
+                  id="btn_absent_${s.uid}"
+                  style="min-width: 90px;"
+                >❌ Absent</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = rows;
+      updateSummary();
+    }
+
+    function toggleStatus(uid, status) {
+      _attendanceMap[uid] = status;
+      // Update button styles
+      const pBtn = document.getElementById(`btn_present_${uid}`);
+      const aBtn = document.getElementById(`btn_absent_${uid}`);
+      pBtn.className = `btn btn-sm ${status === 'present' ? 'btn-primary' : 'btn-outline'}`;
+      aBtn.className = `btn btn-sm ${status === 'absent' ? 'btn-danger' : 'btn-outline'}`;
+      updateSummary();
+    }
+
+    function markAll(status) {
+      _students.forEach(s => toggleStatus(s.uid, status));
+    }
+
+    function updateSummary() {
+      const presentCount = Object.values(_attendanceMap).filter(v => v === 'present').length;
+      const absentCount  = _students.length - presentCount;
+      const pct = _students.length > 0 ? Math.round((presentCount / _students.length) * 100) : 0;
+      document.getElementById("attSummaryRow").innerHTML = `
+        <span class="badge badge-success" style="font-size:0.85rem; padding: 0.35rem 0.75rem;">✅ Present: ${presentCount}</span>
+        <span class="badge badge-danger" style="font-size:0.85rem; padding: 0.35rem 0.75rem;">❌ Absent: ${absentCount}</span>
+        <span class="badge badge-primary" style="font-size:0.85rem; padding: 0.35rem 0.75rem;">📊 ${pct}% attendance today</span>
+      `;
+    }
+
+    // ── Save Attendance ──────────────────────────────────────────────────────
+
+    async function saveAttendance() {
+      const department = document.getElementById("attDeptSelect").value;
+      const semester   = document.getElementById("attSemSelect").value;
+      const section    = document.getElementById("attSectionSelect").value;
+      const subjectSel = document.getElementById("attSubjectSelect");
+      const subjectId  = subjectSel.value;
+      const subjectName = subjectSel.options[subjectSel.selectedIndex].text;
+      const date       = document.getElementById("attDateInput").value;
+      const period     = document.getElementById("attPeriodSelect").value;
+
+      if (!_currentUser) {
+        showToast("Authentication error. Please refresh.", "danger");
+        return;
+      }
+
+      const btn = document.getElementById("saveAttendanceBtn");
+      btn.disabled = true;
+      btn.textContent = "Saving…";
+
+      try {
+        await AttendanceService.saveSessionAttendance({
+          department, semester, section,
+          subjectId, subjectName,
+          date, period,
+          markedBy: _currentUser.uid,
+          attendanceMap: _attendanceMap,
+          studentList: _students
+        });
+
+        showToast(
+          `Attendance saved for ${_students.length} students!`,
+          "success"
+        );
+
+        // Update existing note since it's now saved
+        _sessionExists = true;
+        document.getElementById("existingSessionNote").style.display = "block";
+      } catch (e) {
+        console.error(e);
+        showToast(e.message || "Failed to save attendance", "danger");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 Save Attendance";
+      }
+    }
+
+    function resetSheet() {
+      document.getElementById("attendanceSheetCard").style.display = "none";
+      _students = [];
+      _attendanceMap = {};
+      _sessionExists = false;
+    }
+  </script>
+</body>
+</html>

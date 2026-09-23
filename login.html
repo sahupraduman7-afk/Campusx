@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — CampusX Portal</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Theme Toggle Floating -->
+  <div style="position: absolute; top: 1.5rem; right: 1.5rem; z-index: 20;">
+    <button class="icon-action-btn theme-toggle" title="Toggle Light/Dark Theme">
+      <span class="theme-toggle-icon">🌙</span>
+    </button>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <a href="index.html" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+          <div class="auth-logo">CX</div>
+          <h2 class="auth-title">Welcome to CampusX</h2>
+        </a>
+        <p class="auth-subtitle">Sign in to access your college portal</p>
+      </div>
+
+
+      <!-- Inline Alert -->
+      <div id="loginAlert" class="auth-alert auth-alert-danger" style="display: none;" role="alert"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address <span class="required">*</span></label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="e.g. student@campusx.edu" required autofocus autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <label class="form-label" for="loginPassword" style="margin-bottom: 0;">Password <span class="required">*</span></label>
+            <a href="javascript:void(0)" onclick="openForgotPasswordModal()" class="text-xs font-semibold text-primary">Forgot password?</a>
+          </div>
+          <div class="password-input-wrapper">
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="password-toggle-btn" id="loginPassToggle" aria-label="Show password" onclick="togglePasswordVisibility('loginPassword', this)">
+              <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-row-actions">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe" checked>
+            <span>Remember my session</span>
+          </label>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn btn-primary w-full btn-lg">
+          <span>Sign In to CampusX</span>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span>or continue with</span>
+      </div>
+
+      <!-- Google Sign In Button -->
+      <button type="button" id="googleLoginBtn" class="btn btn-google w-full btn-lg">
+        <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+          <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+          <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+        </svg>
+        <span>Continue with Google</span>
+      </button>
+
+      <div class="auth-switch">
+        <span>Don't have an account yet?</span>
+        <a href="register.html">Create one here</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="forgotModal">
+    <div class="modal" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Reset Password</h3>
+        <button type="button" class="btn-icon" data-close-modal aria-label="Close">&times;</button>
+      </div>
+      <form id="forgotForm" novalidate>
+        <div class="modal-body">
+          <div id="forgotAlert" class="auth-alert" style="display: none;" role="alert"></div>
+          <p class="text-sm text-muted" style="margin-bottom: 1rem;">
+            Enter your college email address. We'll send you secure instructions to reset your password.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="forgotEmail">Email Address <span class="required">*</span></label>
+            <input type="email" id="forgotEmail" class="form-control" placeholder="e.g. user@campusx.edu" required autocomplete="email">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" id="forgotSubmitBtn" class="btn btn-primary">
+            <span>Send Reset Link</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- First-time Google User Role Selection Modal -->
+  <div class="modal-overlay" id="googleRoleModal">
+    <div class="modal" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Welcome to CampusX</h3>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-muted">
+          This is your first time signing in with Google. Please select your role to configure your portal:
+        </p>
+        <div class="role-choice-grid">
+          <div class="role-choice-card selected" id="choiceStudent" onclick="selectGoogleRole('student')">
+            <span class="role-choice-icon">👨‍🎓</span>
+            <span class="role-choice-title">Student</span>
+            <span class="role-choice-desc">Instant access to study notes, assignments, attendance & schedule.</span>
+          </div>
+          <div class="role-choice-card" id="choiceTeacher" onclick="selectGoogleRole('teacher')">
+            <span class="role-choice-icon">👨‍🏫</span>
+            <span class="role-choice-title">Faculty Member</span>
+            <span class="role-choice-desc">Requires Administrator approval before upload & grading permissions are granted.</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="cancelGoogleRoleSelection()">Cancel</button>
+        <button type="button" id="confirmGoogleRoleBtn" class="btn btn-primary" onclick="confirmGoogleRoleSelection()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts (Compat SDK for Vanilla JS) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <!-- CampusX Scripts -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    // --------------------------------------------------------------------------
+    // UI Helpers
+    // --------------------------------------------------------------------------
+    function showAlert(elementId, message, type = "danger") {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.className = `auth-alert auth-alert-${type}`;
+      el.textContent = message;
+      el.style.display = "flex";
+    }
+
+    function hideAlert(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) el.style.display = "none";
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      const eyeOpen = btn.querySelector(".eye-open");
+      const eyeClosed = btn.querySelector(".eye-closed");
+      if (eyeOpen && eyeClosed) {
+        eyeOpen.style.display = isPassword ? "none" : "block";
+        eyeClosed.style.display = isPassword ? "block" : "none";
+      }
+      btn.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+    }
+
+    function openForgotPasswordModal() {
+      hideAlert("forgotAlert");
+      document.getElementById("forgotEmail").value = document.getElementById("loginEmail").value.trim();
+      openModal("forgotModal");
+    }
+
+    // --------------------------------------------------------------------------
+    // Google Sign-In Role Selection Modal Flow
+    // --------------------------------------------------------------------------
+    let pendingGoogleResolver = null;
+    let selectedGoogleRole = "student";
+
+    function selectGoogleRole(role) {
+      selectedGoogleRole = role;
+      document.getElementById("choiceStudent").classList.toggle("selected", role === "student");
+      document.getElementById("choiceTeacher").classList.toggle("selected", role === "teacher");
+    }
+
+    function openGoogleRoleModal() {
+      selectGoogleRole("student");
+      openModal("googleRoleModal");
+      return new Promise((resolve) => {
+        pendingGoogleResolver = resolve;
+      });
+    }
+
+    function confirmGoogleRoleSelection() {
+      closeModal("googleRoleModal");
+      if (pendingGoogleResolver) {
+        pendingGoogleResolver(selectedGoogleRole);
+        pendingGoogleResolver = null;
+      }
+    }
+
+    function cancelGoogleRoleSelection() {
+      closeModal("googleRoleModal");
+      if (pendingGoogleResolver) {
+        pendingGoogleResolver("student");
+        pendingGoogleResolver = null;
+      }
+    }
+
+    // --------------------------------------------------------------------------
+    // Form Event Listeners
+    // --------------------------------------------------------------------------
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideAlert("loginAlert");
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const btn = document.getElementById("loginSubmitBtn");
+      const googleBtn = document.getElementById("googleLoginBtn");
+
+      if (!email || !password) {
+        showAlert("loginAlert", "Please enter both your email and password.");
+        return;
+      }
+
+      btn.disabled = true;
+      googleBtn.disabled = true;
+      btn.innerHTML = `<span class="skeleton" style="display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 8px;"></span> Signing In...`;
+
+      try {
+        const profile = await AuthService.login(email, password);
+        showToast(`Welcome back, ${profile.displayName}!`, "success");
+        setTimeout(() => {
+          AuthService.redirectToRoleDashboard(profile.role);
+        }, 500);
+      } catch (err) {
+        showAlert("loginAlert", err.message, "danger");
+        showToast(err.message, "danger");
+        btn.disabled = false;
+        googleBtn.disabled = false;
+        btn.innerHTML = `<span>Sign In to CampusX</span>`;
+      }
+    });
+
+    document.getElementById("googleLoginBtn").addEventListener("click", async () => {
+      const gBtn = document.getElementById("googleLoginBtn");
+      const loginBtn = document.getElementById("loginSubmitBtn");
+      hideAlert("loginAlert");
+
+      gBtn.disabled = true;
+      loginBtn.disabled = true;
+      const originalHtml = gBtn.innerHTML;
+      gBtn.innerHTML = `<span class="skeleton" style="display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 8px;"></span> Connecting to Google...`;
+
+      try {
+        const profile = await AuthService.signInWithGoogle(null, async (user) => {
+          return await openGoogleRoleModal();
+        });
+
+        showToast(`Signed in as ${profile.displayName}!`, "success");
+        setTimeout(() => {
+          AuthService.redirectToRoleDashboard(profile.role);
+        }, 500);
+      } catch (err) {
+        if (err.message && !err.message.includes("cancelled")) {
+          showAlert("loginAlert", err.message, "danger");
+          showToast(err.message, "danger");
+        }
+        gBtn.disabled = false;
+        loginBtn.disabled = false;
+        gBtn.innerHTML = originalHtml;
+      }
+    });
+
+    document.getElementById("forgotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideAlert("forgotAlert");
+
+      const email = document.getElementById("forgotEmail").value.trim();
+      const submitBtn = document.getElementById("forgotSubmitBtn");
+
+      if (!email) {
+        showAlert("forgotAlert", "Please enter your email address.", "danger");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="skeleton" style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 6px;"></span> Sending...`;
+
+      try {
+        await AuthService.sendPasswordReset(email);
+        showAlert("forgotAlert", "Password reset link sent! Please check your email inbox and spam folder.", "success");
+        showToast("Password reset email sent!", "success");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Send Reset Link</span>`;
+        setTimeout(() => {
+          closeModal("forgotModal");
+          hideAlert("forgotAlert");
+        }, 3000);
+      } catch (err) {
+        showAlert("forgotAlert", err.message, "danger");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Send Reset Link</span>`;
+      }
+    });
+  </script>
+</body>
+</html>

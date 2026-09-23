@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile — CampusX</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academics</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Study Notes</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="exams.html" class="nav-link"><i>🎓</i> <span>Exams</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Campus & Alerts</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+            <li><a href="notifications.html" class="nav-link"><i>🔔</i> <span>Notifications</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Productivity</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="planner.html" class="nav-link"><i>⏱️</i> <span>Planner & Pomodoro</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link active"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Academic Profile</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay">ST</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Student Name</span>
+              <span class="user-role-badge">STUDENT</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; align-items: start;">
+          <!-- Profile Card -->
+          <div class="card" style="text-align: center;">
+            <div class="user-avatar" id="profileAvatarInitial" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 1rem; border: 4px solid var(--primary-light);">
+              ST
+            </div>
+            <h3 id="profileDisplayName" style="font-size: 1.25rem; margin-bottom: 0.25rem;">Student</h3>
+            <span class="badge badge-primary" id="profileRoleBadge" style="margin-bottom: 1rem;">STUDENT</span>
+            <p class="text-sm text-muted" id="profileStudentIdDisplay"></p>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: left; display: flex; flex-direction: column; gap: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem;">
+                <span class="text-muted">Degree:</span>
+                <span class="font-semibold">B.Tech (CSE)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem;">
+                <span class="text-muted">Academic Year:</span>
+                <span class="font-semibold">2025-2026</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem;">
+                <span class="text-muted">Section:</span>
+                <span class="font-semibold">Section A</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8125rem;">
+                <span class="text-muted">Status:</span>
+                <span class="badge badge-success">Enrolled Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Profile Form -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Personal & Academic Details</h3>
+              <span class="text-xs text-muted">Institutional data is verified</span>
+            </div>
+
+            <form id="profileEditForm">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" id="inputFullName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">College Email (Read Only)</label>
+                  <input type="email" id="inputEmail" class="form-control" readonly style="background-color: var(--surface-secondary); opacity: 0.75;">
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Student Roll Number (Institutional)</label>
+                  <input type="text" id="inputStudentId" class="form-control" readonly style="background-color: var(--surface-secondary); opacity: 0.75;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Department</label>
+                  <input type="text" id="inputDepartment" class="form-control" readonly style="background-color: var(--surface-secondary); opacity: 0.75;">
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Course</label>
+                  <input type="text" id="inputCourse" class="form-control" readonly style="background-color: var(--surface-secondary); opacity: 0.75;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Semester</label>
+                  <input type="text" id="inputSemester" class="form-control" readonly style="background-color: var(--surface-secondary); opacity: 0.75;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Section</label>
+                  <input type="text" id="inputSection" class="form-control" readonly style="background-color: var(--surface-secondary); opacity: 0.75;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Contact Phone Number</label>
+                <input type="tel" id="inputPhone" class="form-control" placeholder="+91 98765 43210">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Personal Academic Bio</label>
+                <textarea id="inputBio" class="form-control" rows="3" placeholder="Brief summary about your academic passions..."></textarea>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/student.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      StudentController.initProfile();
+    });
+  </script>
+</body>
+</html>

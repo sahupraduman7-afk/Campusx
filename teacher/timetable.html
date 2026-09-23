@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Schedule — CampusX Faculty</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academic Content</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Notes Manager</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Communication</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Classroom</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="timetable.html" class="nav-link active"><i>📅</i> <span>My Schedule</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👥</i> <span>Students Roster</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>My Weekly Schedule</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Faculty</span>
+              <span class="user-role-badge">TEACHER</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Live Class Status -->
+        <div id="liveClassStatusWrap" style="margin-bottom: 1.5rem;"></div>
+
+        <!-- Weekly Grid -->
+        <div id="weeklyTimetableGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/timetable.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const user = await new Promise(resolve => {
+        const unsub = window.auth.onAuthStateChanged(u => { unsub(); resolve(u); });
+      });
+      if (!user) return;
+      await loadTeacherSchedule(user.uid);
+    });
+
+    async function loadTeacherSchedule(teacherId) {
+      const liveWrap = document.getElementById("liveClassStatusWrap");
+      const grid     = document.getElementById("weeklyTimetableGrid");
+      const today    = TimetableService.getTodayName();
+
+      try {
+        const entries = await TimetableService.getForTeacher(teacherId);
+
+        if (entries.length === 0) {
+          grid.innerHTML = `<div style="grid-column:1/-1;"><div class="card" style="text-align:center; padding:3rem;">
+            <p style="font-size:2rem;">📅</p>
+            <h3 class="card-title">No Classes Scheduled</h3>
+            <p class="text-muted">No timetable entries are assigned to your account yet. Contact admin to set up your schedule.</p>
+          </div></div>`;
+          return;
+        }
+
+        const grouped = TimetableService.groupByDay(entries);
+
+        // Live class for today
+        const todaySlots = grouped[today] || [];
+        if (todaySlots.length > 0) {
+          const { current, next } = TimetableService.getActiveAndUpcomingClass(todaySlots);
+          if (current || next) {
+            const slot = current || next;
+            liveWrap.innerHTML = `
+              <div class="card" style="background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(234,88,12,0.08)); border-color: var(--warning);">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                  <div>
+                    <span class="badge badge-warning" style="margin-bottom: 0.35rem;">TODAY: ${today.toUpperCase()}</span>
+                    <h3 style="font-size: 1.15rem; margin-top: 0.25rem;">
+                      ${current ? 'Current Class: ' : 'Next Class: '}${sanitizeHtml(slot.subject)}
+                    </h3>
+                    <p class="text-sm text-muted">
+                      ${current
+                        ? `📍 ${sanitizeHtml(slot.room)} • Sem ${sanitizeHtml(slot.semester)} Sec ${sanitizeHtml(slot.section)}`
+                        : `Starts at ${sanitizeHtml(slot.startTime)} in ${sanitizeHtml(slot.room)}`}
+                    </p>
+                  </div>
+                  <span class="badge badge-primary" style="font-size: 0.95rem; padding: 0.5rem 1rem;">
+                    ${sanitizeHtml(slot.startTime)}–${sanitizeHtml(slot.endTime)}
+                  </span>
+                </div>
+              </div>`;
+          }
+        }
+
+        // Render weekly grid
+        let html = "";
+        TimetableService.DAYS.forEach(day => {
+          const slots   = grouped[day];
+          const isToday = day === today;
+
+          html += `
+            <div class="card" style="${isToday ? 'border: 2px solid var(--warning); box-shadow: var(--shadow-md);' : ''}">
+              <div class="card-header" style="margin-bottom: 0.75rem;">
+                <h3 class="card-title">${sanitizeHtml(day)}</h3>
+                ${isToday
+                  ? `<span class="badge badge-warning">TODAY</span>`
+                  : `<span class="text-xs text-muted">${slots.length} class${slots.length !== 1 ? 'es' : ''}</span>`}
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                ${slots.length === 0 ? `<p class="text-xs text-muted" style="padding:0.5rem 0;">No classes today</p>` : ""}
+                ${slots.map(slot => `
+                  <div style="padding: 0.75rem; border-radius: var(--radius-md); background-color: var(--surface-secondary); display: flex; flex-direction: column; gap: 0.25rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                      <span class="font-semibold text-sm">${sanitizeHtml(slot.subject)}</span>
+                      <span class="badge badge-secondary" style="font-size: 0.65rem;">${sanitizeHtml(slot.type || 'Lecture')}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                      <span>📍 ${sanitizeHtml(slot.room)} • Sem ${sanitizeHtml(slot.semester)} Sec ${sanitizeHtml(slot.section)}</span>
+                      <span class="font-semibold text-primary">${sanitizeHtml(slot.startTime)}–${sanitizeHtml(slot.endTime)}</span>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          `;
+        });
+        grid.innerHTML = html;
+      } catch (e) {
+        console.error(e);
+        showToast("Error loading schedule", "danger");
+        grid.innerHTML = "";
+      }
+    }
+  </script>
+</body>
+</html>

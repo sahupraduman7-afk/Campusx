@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Notes Manager — CampusX Faculty</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academic Content</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link active"><i>📚</i> <span>Notes Manager</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Communication</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Classroom</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>My Schedule</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👥</i> <span>Students Roster</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Lecture Notes Management</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Faculty</span>
+              <span class="user-role-badge">TEACHER</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 class="card-title">Uploaded Study Material</h3>
+              <p class="card-subtitle">Manage curriculum notes uploaded to Firebase Storage</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('uploadNoteModal')">
+              + Upload New Note (Required Document)
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Subject</th>
+                <th>Upload Date</th>
+                <th>File Name & Size</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teacherNotesTableBody">
+              <tr><td colspan="5" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Upload Note Modal (FILE IS REQUIRED) -->
+  <div class="modal-overlay" id="uploadNoteModal">
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload Lecture Note</h3>
+        <button class="btn-icon" data-close-modal>&times;</button>
+      </div>
+      <form id="uploadNoteForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Note Title <span class="required">*</span></label>
+            <input type="text" id="noteTitleInput" class="form-control" placeholder="e.g. Dynamic Memory Allocation in C" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Subject <span class="required">*</span></label>
+            <select id="noteSubjectSelect" class="form-control form-select" required>
+              <option value="sub_c_prog">C Programming & Data Structures</option>
+              <option value="sub_math">Discrete Mathematics & Graph Theory</option>
+              <option value="sub_dstl">Discrete Structures & Logic (DSTL)</option>
+              <option value="sub_os">Operating Systems & Kernel Design</option>
+              <option value="sub_dbms">Database Management Systems</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description / Summary</label>
+            <textarea id="noteDescInput" class="form-control" rows="3" placeholder="Brief outline of concepts covered in this file..."></textarea>
+          </div>
+
+          <!-- Mandatory File Upload Field -->
+          <div class="form-group">
+            <label class="form-label">Document File <span class="required">* (Mandatory)</span></label>
+            <div class="file-dropzone" id="noteFileDropzone">
+              <span style="font-size: 2rem;">📤</span>
+              <p class="text-sm font-semibold" style="margin: 0.5rem 0 0.25rem;">Click or drag note document here</p>
+              <span class="text-xs text-muted" id="noteFileNameDisplay">Supported: PDF, JPG, PNG, DOC, DOCX (Max 25MB)</span>
+              <input type="file" id="noteFileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,application/pdf,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+            </div>
+          </div>
+
+          <!-- Progress Bar Wrap -->
+          <div id="noteUploadProgressWrap" style="display: none; margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+              <span class="text-muted">Uploading to Secure Storage...</span>
+              <span class="font-semibold text-primary" id="noteUploadProgressText">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="noteUploadProgressBar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Upload & Publish Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <!-- Supabase JS Client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-config.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/notes.js"></script>
+  <script src="../js/teacher.js"></script>
+
+  <script>
+    async function loadTeacherNotes() {
+      const profile = AuthService.getCurrentProfile();
+      const tbody = document.getElementById("teacherNotesTableBody");
+
+      try {
+        const notes = await NotesService.getNotes({ teacherId: profile.uid });
+        if (notes.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 2.5rem;"><p class="text-muted">You haven't uploaded any study notes yet.</p></td></tr>`;
+          return;
+        }
+
+        let html = "";
+        notes.forEach(n => {
+          html += `
+            <tr>
+              <td class="font-semibold">${sanitizeHtml(n.title)}</td>
+              <td><span class="badge badge-primary">${sanitizeHtml(n.subjectName)}</span></td>
+              <td class="text-xs text-muted">${formatDate(n.createdAt)}</td>
+              <td>
+                <span class="text-xs font-semibold">${sanitizeHtml(n.fileName || "File")}</span>
+                <span class="text-xs text-muted">(${sanitizeHtml(n.fileSize || "")})</span>
+              </td>
+              <td style="text-align: right;">
+                <div style="display: inline-flex; gap: 0.35rem; align-items: center;">
+                  <button type="button" onclick="NotesService.viewNote('${n.id}')" class="btn btn-outline btn-sm">👁️ View</button>
+                  <button type="button" onclick="NotesService.downloadNote('${n.id}')" class="btn btn-secondary btn-sm">⬇️ Download</button>
+                  <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteNote('${n.id}', '${n.storagePath || ''}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (err) {
+        showToast("Error loading notes", "danger");
+      }
+    }
+
+    window.loadTeacherNotes = loadTeacherNotes;
+
+    function confirmDeleteNote(id, storagePath) {
+      confirmDialog({
+        title: "Delete Study Note",
+        message: "Are you sure you want to delete this study note? This will also remove the file from Firebase Storage.",
+        confirmText: "Delete Note",
+        onConfirm: async () => {
+          try {
+            await NotesService.deleteNote(id, storagePath);
+            showToast("Note deleted successfully!", "success");
+            loadTeacherNotes();
+          } catch (e) {
+            showToast("Failed to delete note", "danger");
+          }
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      TeacherController.setupNoteUploadModal();
+      loadTeacherNotes();
+
+      // Check if URL has ?action=new
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("action") === "new") {
+        openModal("uploadNoteModal");
+      }
+    });
+  </script>
+</body>
+</html>

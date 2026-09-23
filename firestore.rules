@@ -1,0 +1,201 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --------------------------------------------------------------------------
+    // RBAC & Authentication Helpers
+    // --------------------------------------------------------------------------
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isActive() {
+      return isAuthenticated() && getUserData().status == 'active';
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin' && getUserData().status == 'active';
+    }
+
+    function isTeacher() {
+      return isAuthenticated() && (
+        (getUserData().role == 'teacher' && getUserData().status == 'active') || isAdmin()
+      );
+    }
+
+    function isStudent() {
+      return isAuthenticated() && getUserData().role == 'student' && getUserData().status == 'active';
+    }
+
+    // --------------------------------------------------------------------------
+    // Users Collection (Profile & Account Security)
+    // --------------------------------------------------------------------------
+    match /users/{userId} {
+      // Read access:
+      // 1. Users can always read their own profile.
+      // 2. Admins can read all profiles.
+      // 3. Active teachers can read student profiles (for student roster & academic tracking).
+      // 4. Any authenticated active user can read public active teacher profiles.
+      allow read: if isAuthenticated() && (
+        isOwner(userId) ||
+        isAdmin() ||
+        (isTeacher() && resource.data.role == 'student') ||
+        (resource.data.role == 'teacher' && resource.data.status == 'active')
+      );
+
+      // Create access (Self-Registration):
+      // - Must be authenticated in Firebase Auth matching the document userId.
+      // - Email in Firestore document must match Auth token email.
+      // - Students register with role='student' and status='active'.
+      // - Teachers register with role='teacher' and status='pending' (awaiting admin approval).
+      // - Admin role can NEVER be created through client-side registration.
+      allow create: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && request.resource.data.uid == userId
+                    && request.resource.data.email == request.auth.token.email
+                    && (
+                      (request.resource.data.role == 'student' && request.resource.data.status == 'active') ||
+                      (request.resource.data.role == 'teacher' && request.resource.data.status == 'pending')
+                    );
+
+      // Update access (Profile Edits & Administrative Management):
+      // - Admins can update any profile (change roles, approve teachers, manage status).
+      // - Normal users can update only their own profile, but CANNOT modify protected fields:
+      //   role, status, email, uid, approvedBy, approvedAt, createdAt.
+      allow update: if isAdmin() || (
+        isOwner(userId)
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.uid == resource.data.uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'role', 'status', 'email', 'uid', 'approvedBy', 'approvedAt', 'createdAt'
+        ])
+      );
+
+      // Delete access: Only verified administrators can remove user records.
+      allow delete: if isAdmin();
+    }
+
+    // --------------------------------------------------------------------------
+    // Academic Notes
+    // --------------------------------------------------------------------------
+    match /notes/{noteId} {
+      // Authenticated active students, teachers, and admins can view notes
+      allow read: if isAuthenticated() && isActive();
+      // Only active teachers and admins can upload notes; teacherId must match their own UID
+      allow create: if isTeacher() && request.resource.data.teacherId == request.auth.uid;
+      // Update: teacher must own the note AND cannot change the teacherId; admins retain access
+      allow update: if isAdmin() || (
+        isTeacher()
+        && resource.data.teacherId == request.auth.uid
+        && request.resource.data.teacherId == resource.data.teacherId
+      );
+      // Delete: teacher must own the note, or Admin
+      allow delete: if isAdmin() || (isTeacher() && resource.data.teacherId == request.auth.uid);
+    }
+
+    // --------------------------------------------------------------------------
+    // Assignments
+    // --------------------------------------------------------------------------
+    match /assignments/{assignId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create: if isTeacher() && request.resource.data.teacherId == request.auth.uid;
+      // Update: teacher must own the assignment AND cannot change the teacherId; admins retain access
+      allow update: if isAdmin() || (
+        isTeacher()
+        && resource.data.teacherId == request.auth.uid
+        && request.resource.data.teacherId == resource.data.teacherId
+      );
+      // Delete: teacher must own the assignment, or Admin
+      allow delete: if isAdmin() || (isTeacher() && resource.data.teacherId == request.auth.uid);
+    }
+
+    // --------------------------------------------------------------------------
+    // Student Submissions
+    // --------------------------------------------------------------------------
+    match /submissions/{submissionId} {
+      // Students can only view their own submissions; active teachers and admins can view
+      allow read: if isAuthenticated() && (
+        (resource.data.studentId == request.auth.uid && isActive()) ||
+        isTeacher()
+      );
+      // Students can only create submissions for their own UID
+      allow create: if isStudent() && request.resource.data.studentId == request.auth.uid;
+      // Students can update their own submission; teachers/admins can update (for review/feedback)
+      allow update: if isAuthenticated() && (
+        (resource.data.studentId == request.auth.uid && isStudent() && request.resource.data.studentId == resource.data.studentId) ||
+        isTeacher()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // --------------------------------------------------------------------------
+    // Notices & Circulars
+    // --------------------------------------------------------------------------
+    match /notices/{noticeId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    match /circulars/{circId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create, update, delete: if isTeacher() || isAdmin();
+    }
+
+    // --------------------------------------------------------------------------
+    // Academic Schedule, Attendance & Curriculum
+    // --------------------------------------------------------------------------
+    match /timetable/{dayId} {
+      allow read: if isAuthenticated() && isActive();
+      allow write: if isAdmin();
+    }
+
+    match /attendance/{recordId} {
+      // Students may only read their own records; teachers and admins can read all
+      allow read: if isAuthenticated() && (
+        (isStudent() && resource.data.studentId == request.auth.uid) ||
+        isTeacher() ||
+        isAdmin()
+      );
+      allow write: if isTeacher() || isAdmin();
+    }
+
+    match /exams/{examId} {
+      allow read: if isAuthenticated() && isActive();
+      allow write: if isAdmin();
+    }
+
+    match /departments/{deptId} {
+      allow read: if isAuthenticated() && isActive();
+      allow write: if isAdmin();
+    }
+
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated() && isActive();
+      allow write: if isAdmin();
+    }
+
+    match /notifications/{notifId} {
+      // Any active authenticated user can read notifications.
+      allow read: if isAuthenticated() && isActive();
+      // Mark-as-read: active users may update ONLY the 'read' field on a notification.
+      // Teachers and Admins retain full update access.
+      allow update: if (isTeacher() || isAdmin()) || (
+        isActive()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read == true
+      );
+      // Full management (create, delete): Teachers and Admins only.
+      allow create, delete: if isTeacher() || isAdmin();
+    }
+  }
+}

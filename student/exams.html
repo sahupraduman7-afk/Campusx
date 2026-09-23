@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examination Schedule — CampusX</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academics</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Study Notes</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="exams.html" class="nav-link active"><i>🎓</i> <span>Exams</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Campus & Alerts</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+            <li><a href="notifications.html" class="nav-link"><i>🔔</i> <span>Notifications</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Productivity</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="planner.html" class="nav-link"><i>⏱️</i> <span>Planner & Pomodoro</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Examination Schedule</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay">ST</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Student Name</span>
+              <span class="user-role-badge">STUDENT</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div id="examsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+
+  <script>
+    async function loadExams() {
+      const container = document.getElementById("examsContainer");
+      try {
+        const snap = await window.db.collection("exams").get();
+        const list = snap.docs.map(d => d.data());
+
+        if (list.length === 0) {
+          renderEmptyState(container, {
+            icon: "🎓",
+            title: "No Exams Scheduled",
+            message: "Exam dates have not yet been announced for this term."
+          });
+          return;
+        }
+
+        let html = "";
+        list.forEach(e => {
+          const typeBadge = e.type === "Practical" ? "badge-warning" : "badge-primary";
+          html += `
+            <div class="card card-hover">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <span class="badge ${typeBadge}">${sanitizeHtml(e.type || "Theory")}</span>
+                <span class="text-xs font-semibold text-muted">${sanitizeHtml(e.code || "")}</span>
+              </div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;">${sanitizeHtml(e.subject)}</h3>
+              <p class="text-xs text-muted" style="margin-bottom: 1rem;">${sanitizeHtml(e.title)}</p>
+
+              <div style="background-color: var(--surface-secondary); padding: 0.875rem; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8125rem;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Date:</span>
+                  <span class="font-semibold text-main">📅 ${formatDate(e.date)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Time Slot:</span>
+                  <span class="font-semibold text-primary">⏰ ${sanitizeHtml(e.time)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Assigned Hall:</span>
+                  <span class="font-semibold text-main">📍 ${sanitizeHtml(e.room)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Max Marks:</span>
+                  <span class="font-semibold text-main">${e.totalMarks || 50} Marks</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      } catch (err) {
+        showToast("Error loading exams", "danger");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadExams);
+  </script>
+</body>
+</html>

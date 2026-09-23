@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circulars Manager — CampusX Faculty</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academic Content</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Notes Manager</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Communication</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link active"><i>📜</i> <span>Circulars</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Classroom</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>My Schedule</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👥</i> <span>Students Roster</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Official Circulars</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Faculty</span>
+              <span class="user-role-badge">TEACHER</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 class="card-title">Academic & Institutional Circulars</h3>
+              <p class="card-subtitle">Official orders, holiday notices, and institutional circulars</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('createCircModal')">
+              + Issue Circular (Optional Attachment)
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Issued By</th>
+                <th>Department</th>
+                <th>Date</th>
+                <th>Attachment</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="teacherCircularsTableBody">
+              <tr><td colspan="6" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create Circular Modal -->
+  <div class="modal-overlay" id="createCircModal">
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Publish Institutional Circular</h3>
+        <button class="btn-icon" data-close-modal>&times;</button>
+      </div>
+      <form id="createCircForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Circular Subject / Title <span class="required">*</span></label>
+            <input type="text" id="circTitleInput" class="form-control" placeholder="e.g. Schedule for University Examinations" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Scope / Department</label>
+            <input type="text" id="circDeptInput" class="form-control" value="Campus Wide">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Body / Narrative <span class="required">*</span></label>
+            <textarea id="circDescInput" class="form-control" rows="4" placeholder="Full circular text..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Optional Attached Document</label>
+            <input type="file" id="circFileInput" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <span class="text-xs text-muted">Optional. PDF, JPG, PNG, DOC, DOCX — max 25 MB.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" id="circSubmitBtn" class="btn btn-primary">Publish Circular</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/circulars.js"></script>
+
+  <script>
+    async function loadCircularsTable() {
+      const tbody = document.getElementById("teacherCircularsTableBody");
+      try {
+        const list = await CircularsService.getCirculars();
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 2.5rem;"><p class="text-muted">No circulars issued yet.</p></td></tr>`;
+          return;
+        }
+
+        let html = "";
+        list.forEach(c => {
+          html += `
+            <tr>
+              <td class="font-semibold">${sanitizeHtml(c.title)}</td>
+              <td>${sanitizeHtml(c.issuedBy || "Dean's Office")}</td>
+              <td><span class="badge badge-secondary">${sanitizeHtml(c.department || "Campus Wide")}</span></td>
+              <td class="text-xs text-muted">${formatDate(c.date)}</td>
+              <td>
+                ${c.storagePath ? `
+                  <div style="display: inline-flex; gap: 0.35rem;">
+                    <button onclick="viewCircAttachment('${c.id}')" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                      👁️ View
+                    </button>
+                    <button onclick="downloadCircAttachment('${c.id}')" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                      ⬇️ Download
+                    </button>
+                  </div>
+                ` : `<span class="text-xs text-muted">None</span>`}
+              </td>
+              <td style="text-align: right;">
+                <button class="btn btn-danger btn-sm" onclick="confirmDeleteCirc('${c.id}')">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (e) {
+        showToast("Error loading circulars", "danger");
+      }
+    }
+
+    async function viewCircAttachment(id) {
+      try { await CircularsService.viewAttachment(id); }
+      catch (e) { showToast(e.message || "Could not open attachment", "danger"); }
+    }
+
+    async function downloadCircAttachment(id) {
+      try { await CircularsService.downloadAttachment(id); }
+      catch (e) { showToast(e.message || "Could not download attachment", "danger"); }
+    }
+
+    function confirmDeleteCirc(id) {
+      confirmDialog({
+        title: "Delete Circular",
+        message: "Are you sure you want to withdraw this official circular?",
+        confirmText: "Delete",
+        onConfirm: async () => {
+          try {
+            await CircularsService.deleteCircular(id);
+            showToast("Circular deleted", "success");
+            loadCircularsTable();
+          } catch (e) {
+            showToast("Failed to delete", "danger");
+          }
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCircularsTable();
+
+      document.getElementById("createCircForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const profile = AuthService.getCurrentProfile();
+        const title = document.getElementById("circTitleInput").value.trim();
+        const department = document.getElementById("circDeptInput").value.trim();
+        const description = document.getElementById("circDescInput").value.trim();
+        const fileInput = document.getElementById("circFileInput");
+        const file = fileInput.files[0] || null;
+
+        const btn = document.getElementById("circSubmitBtn");
+        btn.disabled = true;
+
+        try {
+          await CircularsService.publishCircular({
+            title,
+            description,
+            department,
+            date: new Date().toISOString().split("T")[0],
+            file,
+            issuedBy: profile.displayName
+          });
+
+          showToast("Circular published successfully!", "success");
+          closeModal("createCircModal");
+          document.getElementById("createCircForm").reset();
+          loadCircularsTable();
+        } catch (err) {
+          showToast(err.message || "Failed to publish circular", "danger");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

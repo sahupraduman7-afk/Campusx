@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Faculty — CampusX Admin</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Directory Management</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="users.html" class="nav-link"><i>👥</i> <span>All Users</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👨‍🎓</i> <span>Students</span></a></li>
+            <li><a href="teachers.html" class="nav-link active"><i>👨‍🏫</i> <span>Faculty</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Curriculum & Campus</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="departments.html" class="nav-link"><i>🏛️</i> <span>Departments</span></a></li>
+            <li><a href="subjects.html" class="nav-link"><i>📖</i> <span>Subjects</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="content.html" class="nav-link"><i>📁</i> <span>Content Moderation</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Administration</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="settings.html" class="nav-link"><i>⚙️</i> <span>Platform Settings</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Faculty & Instructors Directory</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #ef4444, #dc2626);">AD</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Admin</span>
+              <span class="user-role-badge">ADMIN</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+          <input type="text" id="teacherSearch" class="form-control" placeholder="🔍 Search faculty by name, department, or cabin...">
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Faculty Member</th>
+                <th>Designation</th>
+                <th>Department</th>
+                <th>Cabin / Office</th>
+                <th>Status</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminTeachersTbody">
+              <tr><td colspan="6" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+
+  <script>
+    let allTeachers = [];
+
+    async function loadTeachers() {
+      try {
+        const snap = await window.db.collection("users").get();
+        allTeachers = snap.docs.map(d => ({ uid: d.id, ...d.data() })).filter(u => u.role === "teacher");
+        renderTeachers();
+      } catch (e) {
+        showToast("Error loading faculty", "danger");
+      }
+    }
+
+    function renderTeachers() {
+      const tbody = document.getElementById("adminTeachersTbody");
+      const search = (document.getElementById("teacherSearch").value || "").toLowerCase().trim();
+
+      let filtered = allTeachers;
+      if (search) {
+        filtered = filtered.filter(t => 
+          (t.displayName && t.displayName.toLowerCase().includes(search)) ||
+          (t.email && t.email.toLowerCase().includes(search)) ||
+          (t.department && t.department.toLowerCase().includes(search)) ||
+          (t.cabin && t.cabin.toLowerCase().includes(search))
+        );
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 1.5rem 0; color: var(--text-muted);">No faculty members match your criteria.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      filtered.forEach(t => {
+        const status = t.status || "active";
+        let statusBadge = `<span class="badge badge-success">Active</span>`;
+        let actionBtn = `<button class="btn btn-outline btn-sm" style="font-size: 0.75rem; color: var(--danger);" onclick="setTeacherStatus('${t.uid}', 'suspended')">Suspend</button>`;
+
+        if (status === "pending") {
+          statusBadge = `<span class="badge badge-warning">Pending Approval</span>`;
+          actionBtn = `<button class="btn btn-primary btn-sm" style="font-size: 0.75rem;" onclick="approveTeacher('${t.uid}')">Approve</button>`;
+        } else if (status === "suspended") {
+          statusBadge = `<span class="badge badge-danger">Suspended</span>`;
+          actionBtn = `<button class="btn btn-outline btn-sm" style="font-size: 0.75rem;" onclick="setTeacherStatus('${t.uid}', 'active')">Activate</button>`;
+        }
+
+        html += `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">${t.avatar || (t.displayName ? t.displayName.substring(0, 2).toUpperCase() : "TC")}</div>
+                <div>
+                  <span class="font-semibold text-sm">${sanitizeHtml(t.displayName)}</span>
+                  <p class="text-xs text-muted">${sanitizeHtml(t.email)}</p>
+                </div>
+              </div>
+            </td>
+            <td>${sanitizeHtml(t.designation || "Faculty Member")}</td>
+            <td><span class="badge badge-primary">${sanitizeHtml(t.department || "General")}</span></td>
+            <td>${sanitizeHtml(t.cabin || t.officeRoom || "Academic Block")}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align: right;">${actionBtn}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    async function approveTeacher(uid) {
+      try {
+        await window.db.collection("users").doc(uid).update({ 
+          status: "active",
+          approvedAt: new Date().toISOString()
+        });
+        showToast("Teacher approved successfully!", "success");
+        const match = allTeachers.find(t => t.uid === uid);
+        if (match) match.status = "active";
+        renderTeachers();
+      } catch (e) {
+        showToast("Failed to approve teacher: " + e.message, "danger");
+      }
+    }
+
+    async function setTeacherStatus(uid, newStatus) {
+      try {
+        await window.db.collection("users").doc(uid).update({ status: newStatus });
+        showToast(`Teacher status changed to ${newStatus}`, "success");
+        const match = allTeachers.find(t => t.uid === uid);
+        if (match) match.status = newStatus;
+        renderTeachers();
+      } catch (e) {
+        showToast("Failed to update status: " + e.message, "danger");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadTeachers();
+      document.getElementById("teacherSearch").addEventListener("input", renderTeachers);
+    });
+  </script>
+</body>
+</html>

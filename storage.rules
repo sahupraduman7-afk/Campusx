@@ -1,0 +1,94 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // --------------------------------------------------------------------------
+    // RBAC & Verification Helpers
+    // --------------------------------------------------------------------------
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUnderMaxSize(maxMegabytes) {
+      return request.resource.size < maxMegabytes * 1024 * 1024;
+    }
+
+    function getUserData() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isActive() {
+      return isAuthenticated() && getUserData().status == 'active';
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin' && getUserData().status == 'active';
+    }
+
+    function isTeacher() {
+      return isAuthenticated() && (
+        (getUserData().role == 'teacher' && getUserData().status == 'active') || isAdmin()
+      );
+    }
+
+    // --------------------------------------------------------------------------
+    // Notes & Study Materials: Max 25MB
+    // Read (View/Download): Active authenticated users (Students, Teachers, Admins)
+    // Create/Update: Active Teachers & Admins only, max 25MB
+    // Delete: Active Teachers & Admins only (no size check needed on delete)
+    // --------------------------------------------------------------------------
+    match /notes/{noteId}/{fileName} {
+      allow read:          if isActive();
+      allow create, update: if isTeacher() && isUnderMaxSize(25);
+      allow delete:        if isTeacher();
+    }
+
+    // --------------------------------------------------------------------------
+    // Assignment Attachments: Max 25MB
+    // Read (View/Download): Active authenticated users (Students, Teachers, Admins)
+    // Create/Update: Active Teachers & Admins only, max 25MB
+    // Delete: Active Teachers & Admins only
+    // --------------------------------------------------------------------------
+    match /assignments/{assignId}/{fileName} {
+      allow read:          if isActive();
+      allow create, update: if isTeacher() && isUnderMaxSize(25);
+      allow delete:        if isTeacher();
+    }
+
+    // --------------------------------------------------------------------------
+    // Student Submissions: Student upload for own UID only, max 25MB
+    // Read: Only student owner or active Teacher/Admin
+    // Create/Update: Only the submitting student for their own UID, max 25MB
+    // Delete: Admin only (students cannot delete their own submissions)
+    // --------------------------------------------------------------------------
+    match /submissions/{assignId}/{studentId}/{fileName} {
+      allow read:          if isActive() && (request.auth.uid == studentId || isTeacher());
+      allow create, update: if isActive() && request.auth.uid == studentId && isUnderMaxSize(25);
+      allow delete:        if isAdmin();
+    }
+
+    // --------------------------------------------------------------------------
+    // Notices Attachments: Max 25MB
+    // Read (View/Download): Active authenticated users (Students, Teachers, Admins)
+    // Create/Update: Active Teachers & Admins only, max 25MB
+    // Delete: Active Teachers & Admins only
+    // --------------------------------------------------------------------------
+    match /notices/{noticeId}/{fileName} {
+      allow read:          if isActive();
+      allow create, update: if isTeacher() && isUnderMaxSize(25);
+      allow delete:        if isTeacher();
+    }
+
+    // --------------------------------------------------------------------------
+    // Circulars Attachments: Max 25MB
+    // Read (View/Download): Active authenticated users (Students, Teachers, Admins)
+    // Create/Update: Active Teachers & Admins only, max 25MB
+    // Delete: Active Teachers & Admins only
+    // --------------------------------------------------------------------------
+    match /circulars/{circId}/{fileName} {
+      allow read:          if isActive();
+      allow create, update: if isTeacher() && isUnderMaxSize(25);
+      allow delete:        if isTeacher();
+    }
+  }
+}

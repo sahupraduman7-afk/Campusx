@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — CampusX Portal</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Theme Toggle Floating -->
+  <div style="position: absolute; top: 1.5rem; right: 1.5rem; z-index: 20;">
+    <button class="icon-action-btn theme-toggle" title="Toggle Light/Dark Theme">
+      <span class="theme-toggle-icon">🌙</span>
+    </button>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card auth-card-wide">
+      <div class="auth-brand">
+        <a href="index.html" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+          <div class="auth-logo">CX</div>
+          <h2 class="auth-title">Join CampusX</h2>
+        </a>
+        <p class="auth-subtitle">Create your verified college account</p>
+      </div>
+
+      <!-- Role Selector Tabs -->
+      <div class="role-tabs">
+        <button type="button" class="role-tab-btn active" id="roleBtnStudent" onclick="selectRole('student')">
+          👨‍🎓 I am a Student
+        </button>
+        <button type="button" class="role-tab-btn" id="roleBtnTeacher" onclick="selectRole('teacher')">
+          👨‍🏫 I am a Faculty Member
+        </button>
+      </div>
+
+      <!-- Inline Alert -->
+      <div id="regAlert" class="auth-alert auth-alert-danger" style="display: none;" role="alert"></div>
+
+      <!-- Registration Form -->
+      <form id="registerForm" novalidate>
+        <input type="hidden" id="selectedRole" value="student">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="regFullName">Full Name <span class="required">*</span></label>
+            <input type="text" id="regFullName" class="form-control" placeholder="Enter your full name" required autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regEmail">College Email <span class="required">*</span></label>
+            <input type="email" id="regEmail" class="form-control" placeholder="user@campusx.edu" required autocomplete="email">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Password <span class="required">*</span></label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPassword" class="form-control" placeholder="Min. 6 characters" minlength="6" required autocomplete="new-password">
+              <button type="button" class="password-toggle-btn" id="regPassToggle" aria-label="Show password" onclick="togglePasswordVisibility('regPassword', this)">
+                <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regDepartment">Department <span class="required">*</span></label>
+            <select id="regDepartment" class="form-control form-select" required>
+              <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics & Communication">Electronics & Communication</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Student-only Fields -->
+        <div id="studentFields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="regStudentId">Student Roll / ID <span class="required">*</span></label>
+            <input type="text" id="regStudentId" class="form-control" placeholder="e.g. CS202409">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regSemester">Semester</label>
+            <select id="regSemester" class="form-control form-select">
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6" selected>Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Teacher-only Fields -->
+        <div id="teacherFields" style="display: none; margin-bottom: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="regDesignation">Designation / Title</label>
+            <input type="text" id="regDesignation" class="form-control" placeholder="e.g. Assistant Professor">
+          </div>
+        </div>
+
+        <button type="submit" id="regSubmitBtn" class="btn btn-primary w-full btn-lg">
+          <span>Create Account</span>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span>or sign up with</span>
+      </div>
+
+      <!-- Google Sign Up Button -->
+      <button type="button" id="googleRegBtn" class="btn btn-google w-full btn-lg">
+        <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+          <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+          <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+        </svg>
+        <span id="googleRegBtnText">Continue with Google (as Student)</span>
+      </button>
+
+      <div class="auth-switch">
+        <span>Already have an account?</span>
+        <a href="login.html">Sign in here</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <!-- CampusX Scripts -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    function showAlert(message, type = "danger") {
+      const el = document.getElementById("regAlert");
+      if (!el) return;
+      el.className = `auth-alert auth-alert-${type}`;
+      el.textContent = message;
+      el.style.display = "flex";
+    }
+
+    function hideAlert() {
+      const el = document.getElementById("regAlert");
+      if (el) el.style.display = "none";
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      const eyeOpen = btn.querySelector(".eye-open");
+      const eyeClosed = btn.querySelector(".eye-closed");
+      if (eyeOpen && eyeClosed) {
+        eyeOpen.style.display = isPassword ? "none" : "block";
+        eyeClosed.style.display = isPassword ? "block" : "none";
+      }
+      btn.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+    }
+
+    function selectRole(role) {
+      document.getElementById("selectedRole").value = role;
+      const studentBtn = document.getElementById("roleBtnStudent");
+      const teacherBtn = document.getElementById("roleBtnTeacher");
+      const studentFields = document.getElementById("studentFields");
+      const teacherFields = document.getElementById("teacherFields");
+      const gBtnText = document.getElementById("googleRegBtnText");
+
+      if (role === "student") {
+        studentBtn.classList.add("active");
+        teacherBtn.classList.remove("active");
+        studentFields.style.display = "grid";
+        teacherFields.style.display = "none";
+        if (gBtnText) gBtnText.textContent = "Continue with Google (as Student)";
+      } else {
+        teacherBtn.classList.add("active");
+        studentBtn.classList.remove("active");
+        studentFields.style.display = "none";
+        teacherFields.style.display = "block";
+        if (gBtnText) gBtnText.textContent = "Continue with Google (as Faculty)";
+      }
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const role = document.getElementById("selectedRole").value;
+      const fullName = document.getElementById("regFullName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const department = document.getElementById("regDepartment").value;
+      const studentId = document.getElementById("regStudentId").value.trim();
+      const semester = document.getElementById("regSemester").value;
+
+      if (!fullName || !email || !password) {
+        showAlert("Please fill in all required fields.");
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert("Password must be at least 6 characters long.");
+        return;
+      }
+
+      const btn = document.getElementById("regSubmitBtn");
+      const googleBtn = document.getElementById("googleRegBtn");
+      btn.disabled = true;
+      googleBtn.disabled = true;
+      btn.innerHTML = `<span class="skeleton" style="display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 8px;"></span> Creating Account...`;
+
+      try {
+        const profile = await AuthService.register({
+          email,
+          password,
+          fullName,
+          role,
+          department,
+          studentId: role === "student" ? studentId : null,
+          semester: role === "student" ? semester : null
+        });
+
+        if (profile.status === "pending") {
+          showAlert("Faculty account registered! A verification email has been dispatched. Note: Faculty access requires Administrator approval before full permissions are enabled.", "info");
+          showToast("Faculty registration submitted! Verification email sent.", "info", 5000);
+        } else {
+          showAlert("Account created successfully! We've sent a verification link to your email. Redirecting...", "success");
+          showToast("Account created! Verification email sent.", "success", 4000);
+        }
+
+        setTimeout(() => {
+          AuthService.redirectToRoleDashboard(profile.role);
+        }, 2000);
+      } catch (err) {
+        showAlert(err.message, "danger");
+        showToast(err.message, "danger");
+        btn.disabled = false;
+        googleBtn.disabled = false;
+        btn.innerHTML = `<span>Create Account</span>`;
+      }
+    });
+
+    document.getElementById("googleRegBtn").addEventListener("click", async () => {
+      hideAlert();
+      const role = document.getElementById("selectedRole").value;
+      const btn = document.getElementById("regSubmitBtn");
+      const googleBtn = document.getElementById("googleRegBtn");
+
+      btn.disabled = true;
+      googleBtn.disabled = true;
+      const originalHtml = googleBtn.innerHTML;
+      googleBtn.innerHTML = `<span class="skeleton" style="display: inline-block; width: 16px; height: 16px; border-radius: 50%; margin-right: 8px;"></span> Connecting to Google...`;
+
+      try {
+        const profile = await AuthService.signInWithGoogle(role);
+        showToast(`Welcome to CampusX, ${profile.displayName}!`, "success");
+        setTimeout(() => {
+          AuthService.redirectToRoleDashboard(profile.role);
+        }, 600);
+      } catch (err) {
+        if (err.message && !err.message.includes("cancelled")) {
+          showAlert(err.message, "danger");
+          showToast(err.message, "danger");
+        }
+        btn.disabled = false;
+        googleBtn.disabled = false;
+        googleBtn.innerHTML = originalHtml;
+      }
+    });
+  </script>
+</body>
+</html>

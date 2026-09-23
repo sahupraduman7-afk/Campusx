@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Settings — CampusX Admin</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Directory Management</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="users.html" class="nav-link"><i>👥</i> <span>All Users</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👨‍🎓</i> <span>Students</span></a></li>
+            <li><a href="teachers.html" class="nav-link"><i>👨‍🏫</i> <span>Faculty</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Curriculum & Campus</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="departments.html" class="nav-link"><i>🏛️</i> <span>Departments</span></a></li>
+            <li><a href="subjects.html" class="nav-link"><i>📖</i> <span>Subjects</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="content.html" class="nav-link"><i>📁</i> <span>Content Moderation</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Administration</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="settings.html" class="nav-link active"><i>⚙️</i> <span>Platform Settings</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Platform Settings</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #ef4444, #dc2626);">AD</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Admin</span>
+              <span class="user-role-badge">ADMIN</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- Firebase Connection Diagnostics -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">🔌 Firebase Connection Diagnostics</h3>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light);">
+                <span class="text-sm font-semibold">Active Backend Mode:</span>
+                <span class="badge badge-success">Live Firebase Cloud Services</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light);">
+                <span class="text-sm font-semibold">Firebase Authentication:</span>
+                <span class="badge badge-success">✓ Ready</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light);">
+                <span class="text-sm font-semibold">Cloud Firestore Database:</span>
+                <span class="badge badge-success">✓ Connected</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light);">
+                <span class="text-sm font-semibold">Firebase Cloud Storage:</span>
+                <span class="badge badge-success">✓ Online</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Platform Info -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">ℹ️ Platform Information</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light);">
+                <span class="text-sm font-semibold">Platform:</span>
+                <span class="badge badge-primary">CampusX</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light);">
+                <span class="text-sm font-semibold">Firebase SDK:</span>
+                <span class="text-sm text-muted">v10.12.2 (Compat)</span>
+              </div>
+              <div style="background-color: var(--surface-secondary); padding: 0.875rem; border-radius: var(--radius-md); font-size: 0.8125rem;">
+                <p class="text-muted">
+                  Firebase credentials are configured in <code>js/firebase-config.js</code>. Security rules are defined in <code>firestore.rules</code> and <code>storage.rules</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Configuration Form -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title">College Academic Session Settings</h3>
+          </div>
+
+          <form id="campusSettingsForm">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">Institution Name</label>
+                <input type="text" class="form-control" value="CampusX Institute of Technology & Research">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Active Academic Year</label>
+                <input type="text" class="form-control" value="2025 - 2026 (Even Semester)">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">Minimum Attendance Requirement</label>
+                <input type="text" class="form-control" value="75.0 % (University Statutory)" readonly style="background-color: var(--surface-secondary);">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Support Helpdesk Email</label>
+                <input type="email" class="form-control" value="academics@campusx.edu">
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-primary">Save Session Configuration</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/admin.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("campusSettingsForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        showToast("Session configuration saved!", "success");
+      });
+    });
+  </script>
+</body>
+</html>

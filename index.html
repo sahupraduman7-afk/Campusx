@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusX — One Campus. One Platform. Everything Students Need.</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    /* Landing Page Specific Styling */
+    .landing-nav {
+      height: 76px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    [data-theme="dark"] .landing-nav {
+      background-color: rgba(19, 27, 46, 0.85);
+    }
+    .landing-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .landing-nav-links a {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.9375rem;
+    }
+    .landing-nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: 6rem 2rem 5rem;
+      text-align: center;
+      background: radial-gradient(circle at 50% 20%, rgba(79, 70, 229, 0.12) 0%, rgba(14, 165, 233, 0.05) 60%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-full);
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      max-width: 860px;
+      margin: 0 auto 1.5rem;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    /* Section Container */
+    .section-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .section-header h2 {
+      font-size: 2.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+    }
+    .feature-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* How It Works Steps */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      position: relative;
+    }
+    .step-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      position: relative;
+      text-align: center;
+    }
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #ffffff;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Role Cards */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    .role-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .role-card-header {
+      margin-bottom: 1.5rem;
+    }
+    .role-card ul {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .role-card li {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .role-card li::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 4rem 2rem 2rem;
+    }
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+    }
+    .footer-col h5 {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+    .footer-col ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .footer-col a {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .footer-col a:hover {
+      color: var(--primary);
+    }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.25rem; }
+      .roles-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .landing-nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="landing-nav">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 1.25rem;">
+        CX
+      </div>
+      <div>
+        <span style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em;">Campus<span style="color: var(--primary);">X</span></span>
+      </div>
+    </div>
+
+    <nav class="landing-nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#roles">Portals</a>
+      <a href="README.md" target="_blank">Documentation</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <button class="icon-action-btn theme-toggle" title="Toggle Light/Dark Theme">
+        <span class="theme-toggle-icon">🌙</span>
+      </button>
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-badge">
+      <span>✨ Next-Gen College Academic Portal</span>
+    </div>
+    <h1 class="hero-title">
+      Your College. Connected. <span>Simplified.</span>
+    </h1>
+    <p class="hero-subtitle">
+      CampusX brings academics, study resources, assignments, announcements, timetable schedules, and student productivity into one intelligent, unified platform.
+    </p>
+    <div class="hero-cta">
+      <a href="login.html" class="btn btn-primary btn-lg">Login to Portal →</a>
+      <a href="#features" class="btn btn-secondary btn-lg">Explore CampusX</a>
+    </div>
+  </section>
+
+  <!-- Key Features Grid -->
+  <section class="section-wrap" id="features">
+    <div class="section-header">
+      <span class="badge badge-primary" style="margin-bottom: 0.75rem;">Core Modules</span>
+      <h2>Everything College Life Demands</h2>
+      <p>Engineered for high academic performance, clarity, and daily collaboration.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background-color: var(--primary-light); color: var(--primary);">📚</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Academic Notes & Resources</h3>
+        <p>Direct access to professor-curated notes, lecture slides, and PDF reference material with search and filtering.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background-color: var(--info-bg); color: var(--info);">📋</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Assignment Management</h3>
+        <p>Never miss a submission deadline. Submit code and project documents online and receive timely teacher feedback.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background-color: var(--warning-bg); color: var(--warning);">📢</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Notices & Circulars</h3>
+        <p>Official announcements, exam schedules, and department bulletins delivered in real-time with priority badges.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background-color: var(--success-bg); color: var(--success);">📊</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">75% Attendance Analytics</h3>
+        <p>Subject-wise tracking with predictive intelligence: calculate safe bunks or required classes to stay eligible.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background-color: var(--accent-light); color: var(--accent);">📅</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Interactive Timetable</h3>
+        <p>Weekly schedules with live "Happening Now" indicators, classroom numbers, and upcoming lecture alerts.</p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background-color: var(--danger-bg); color: var(--danger);">⏱️</div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Study Planner & Pomodoro</h3>
+        <p>Built-in 25/5 minute focus timer with audio cues and a personal study task manager to maximize focus.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section-wrap" id="how-it-works" style="background-color: var(--surface-secondary); border-radius: var(--radius-xl); margin: 3rem auto;">
+    <div class="section-header">
+      <span class="badge badge-info" style="margin-bottom: 0.75rem;">Workflow</span>
+      <h2>How CampusX Operates</h2>
+      <p>Seamless communication loop bridging students, faculty, and administration.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>Instant Role Login</h4>
+        <p class="text-sm text-muted">Students, teachers, and admins log in securely with role-tailored dashboards.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>Faculty Publish Content</h4>
+        <p class="text-sm text-muted">Professors upload verified notes, post assignments, and issue circulars directly.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>Students Access & Submit</h4>
+        <p class="text-sm text-muted">Scholars download documents, submit work, track deadlines, and monitor attendance.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4>Campus-Wide Synergy</h4>
+        <p class="text-sm text-muted">Transparent academic progress, zero paperwork, and enhanced institutional efficiency.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Role Portals Section -->
+  <section class="section-wrap" id="roles">
+    <div class="section-header">
+      <span class="badge badge-warning" style="margin-bottom: 0.75rem;">Three Tailored Portals</span>
+      <h2>Engineered for Every Campus Role</h2>
+      <p>Specialized tools and security perimeters for all academic stakeholders.</p>
+    </div>
+
+    <div class="roles-grid">
+      <!-- Student Card -->
+      <div class="role-card">
+        <div>
+          <div class="role-card-header">
+            <span class="badge badge-primary">Student Portal</span>
+            <h3 style="margin-top: 0.5rem;">Learners & Scholars</h3>
+            <p class="text-sm text-muted">Centralized academic hub for classes, notes, and productivity.</p>
+          </div>
+          <ul>
+            <li>Download lecture notes & slides</li>
+            <li>Submit assignments with attachments</li>
+            <li>75% Attendance health calculator</li>
+            <li>Weekly timetable with live class tracker</li>
+            <li>Personal task planner & Pomodoro timer</li>
+            <li>Examination schedules & hall ticket alerts</li>
+          </ul>
+        </div>
+        <a href="login.html" class="btn btn-outline btn-sm w-full">Student Login →</a>
+      </div>
+
+      <!-- Teacher Card -->
+      <div class="role-card" style="border-color: var(--primary);">
+        <div>
+          <div class="role-card-header">
+            <span class="badge badge-warning">Faculty Portal</span>
+            <h3 style="margin-top: 0.5rem;">Professors & Instructors</h3>
+            <p class="text-sm text-muted">Powerful content publishing and classroom management.</p>
+          </div>
+          <ul>
+            <li>Upload study notes with progress indicator</li>
+            <li>Create assignments with optional attachments</li>
+            <li>Review & download student submissions</li>
+            <li>Publish department notices & circulars</li>
+            <li>Class roster & student attendance overview</li>
+            <li>Edit and moderate personal uploaded content</li>
+          </ul>
+        </div>
+        <a href="login.html" class="btn btn-primary btn-sm w-full">Faculty Login →</a>
+      </div>
+
+      <!-- Admin Card -->
+      <div class="role-card">
+        <div>
+          <div class="role-card-header">
+            <span class="badge badge-danger">Admin Portal</span>
+            <h3 style="margin-top: 0.5rem;">Academic Leadership</h3>
+            <p class="text-sm text-muted">Complete institution oversight and database controls.</p>
+          </div>
+          <ul>
+            <li>Campus-wide performance statistics</li>
+            <li>User directory & role permission grants</li>
+            <li>Department and subject curriculum manager</li>
+            <li>Central resource and circular moderation</li>
+            <li>Firebase connection tester & data seeder</li>
+            <li>System settings & audit records</li>
+          </ul>
+        </div>
+        <a href="login.html" class="btn btn-outline btn-sm w-full">Admin Login →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800;">CX</div>
+          <span style="font-size: 1.25rem; font-weight: 800;">CampusX</span>
+        </div>
+        <p style="font-size: 0.875rem; max-width: 320px; margin-bottom: 1rem;">
+          One Campus. One Platform. Everything Students Need. Built as a full-stack academic web platform with Firebase.
+        </p>
+        <span class="badge badge-success">v2.0 Production Ready</span>
+      </div>
+
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="login.html">Portal Login</a></li>
+          <li><a href="register.html">Create Account</a></li>
+          <li><a href="#features">Platform Features</a></li>
+          <li><a href="#roles">Portals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Academics</h5>
+        <ul>
+          <li><a href="login.html">Study Notes</a></li>
+          <li><a href="login.html">Assignments</a></li>
+          <li><a href="login.html">Class Timetable</a></li>
+          <li><a href="login.html">Attendance</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Documentation</h5>
+        <ul>
+          <li><a href="README.md" target="_blank">Setup Instructions</a></li>
+          <li><a href="docs/COLLEGE_PROJECT_REPORT.md" target="_blank">Project Report</a></li>
+          <li><a href="firestore.rules" target="_blank">Security Rules</a></li>
+          <li><a href="mailto:support@campusx.edu">Contact Support</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 CampusX Technologies. College Academic Mini-Project Deliverable.</p>
+      <div style="display: flex; gap: 1.5rem;">
+        <a href="#" class="text-muted">Privacy Policy</a>
+        <a href="#" class="text-muted">Terms of Service</a>
+        <a href="#" class="text-muted">Academic Integrity</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Analytics — CampusX</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academics</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Study Notes</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="attendance.html" class="nav-link active"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="exams.html" class="nav-link"><i>🎓</i> <span>Exams</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Campus & Alerts</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+            <li><a href="notifications.html" class="nav-link"><i>🔔</i> <span>Notifications</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Productivity</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="planner.html" class="nav-link"><i>⏱️</i> <span>Planner & Pomodoro</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Attendance Tracking & 75% Calculator</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay">ST</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Student Name</span>
+              <span class="user-role-badge">STUDENT</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Top Summary Cards -->
+        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; margin-bottom: 1.75rem; align-items: stretch;">
+          <!-- Overall Attendance Circular Gauge -->
+          <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <h3 class="card-title" style="margin-bottom: 1rem;">Overall Attendance</h3>
+            <div class="gauge-container" style="padding: 0.5rem 0;">
+              <div class="gauge-circle" id="overallGauge" style="--percent: 85;">
+                <div class="gauge-inner">
+                  <span class="gauge-percent" id="overallPercentText">85%</span>
+                  <span class="gauge-label">Aggregated</span>
+                </div>
+              </div>
+            </div>
+            <div id="overallEligibilityBadge" style="margin-top: 0.75rem;">
+              <span class="badge badge-success">✓ Eligible for Examinations (≥75%)</span>
+            </div>
+          </div>
+
+          <!-- Interactive 75% Predictive Calculator Card -->
+          <div class="card" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(14, 165, 233, 0.04));">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">🧮 75% Rule Attendance Predictor</h3>
+                <p class="card-subtitle">Informational mathematical calculation based on university statutory norms</p>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Total Classes Attended (A)</label>
+                <input type="number" id="calcAttendedInput" class="form-control" value="34" min="0">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Total Classes Conducted (T)</label>
+                <input type="number" id="calcTotalInput" class="form-control" value="40" min="1">
+              </div>
+            </div>
+
+            <!-- Projection Output Alert Box -->
+            <div id="calcResultBox" class="card" style="border-left: 4px solid var(--success); background-color: var(--surface);">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <span class="font-semibold text-sm" id="calcResultTitle">Status: Eligible (85.0%)</span>
+              </div>
+              <p class="text-sm text-muted" id="calcResultMessage">
+                You can safely miss up to 5 upcoming classes while maintaining above 75%.
+              </p>
+            </div>
+            <span class="text-xs text-muted" style="display: block; margin-top: 0.5rem;">
+              * Note: Formula conforms to standard collegiate regulations: \(\lceil(0.75T - A)/0.25\rceil\) for shortages, and \(\lfloor(A - 0.75T)/0.75\rfloor\) for safe bunks.
+            </span>
+          </div>
+        </div>
+
+        <!-- Subject-Wise Attendance Breakdown Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Course-Wise Attendance Breakdown</h3>
+            <span class="text-xs text-muted">Statutory Minimum: 75.0%</span>
+          </div>
+
+          <div class="table-container">
+            <table class="table" id="attendanceTable">
+              <thead>
+                <tr>
+                  <th>Course / Subject</th>
+                  <th>Classes Attended</th>
+                  <th>Total Classes</th>
+                  <th>Attendance %</th>
+                  <th>Status & Projection</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTableBody">
+                <tr><td colspan="5" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/attendance.js"></script>
+
+  <script>
+    async function loadAttendanceData() {
+      try {
+        // Wait for auth to resolve
+        const user = await new Promise(resolve => {
+          const unsub = window.auth.onAuthStateChanged(u => { unsub(); resolve(u); });
+        });
+        if (!user) return;
+
+        // Fetch only this student's own records
+        const rawRecords = await AttendanceService.getMyAttendance(user.uid);
+        const records    = AttendanceService.aggregateBySubject(rawRecords);
+        const overall    = AttendanceService.calculateOverall(records);
+
+        // Update overall gauge
+        const gauge          = document.getElementById("overallGauge");
+        const percentText    = document.getElementById("overallPercentText");
+        const eligibilityBadge = document.getElementById("overallEligibilityBadge");
+
+        gauge.style.setProperty("--percent", Math.min(100, Math.round(overall.percentage)));
+        percentText.textContent = `${overall.percentage}%`;
+
+        if (overall.percentage >= 75) {
+          eligibilityBadge.innerHTML = `<span class="badge badge-success">✓ Exam Eligible (≥75%)</span>`;
+        } else {
+          eligibilityBadge.innerHTML = `<span class="badge badge-danger">⚠ Attendance Warning (<75%)</span>`;
+        }
+
+        // Populate calculator defaults
+        document.getElementById("calcAttendedInput").value = overall.attended;
+        document.getElementById("calcTotalInput").value    = overall.total;
+        updateCalculatorProjection();
+
+        // Render subject-wise rows
+        const tbody = document.getElementById("attendanceTableBody");
+
+        if (records.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:2rem;" class="text-muted">No attendance records found for your account.</td></tr>`;
+          return;
+        }
+
+        let rows = "";
+        records.forEach(r => {
+          const projection    = AttendanceService.calculateProjection(r.attended, r.total, 75);
+          const isSafe        = r.percentage >= 75;
+          const statusBadge   = isSafe ? "badge-success" : "badge-danger";
+          const progressClass = isSafe ? "success" : "danger";
+
+          rows += `
+            <tr>
+              <td>
+                <span class="font-semibold text-sm">${sanitizeHtml(r.subjectName)}</span>
+              </td>
+              <td>${r.attended}</td>
+              <td>${r.total}</td>
+              <td style="width: 200px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <span class="font-semibold text-xs">${r.percentage}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill ${progressClass}" style="width: ${Math.min(100, r.percentage)}%;"></div>
+                </div>
+              </td>
+              <td>
+                <span class="badge ${statusBadge}" style="margin-bottom: 0.25rem;">${isSafe ? 'Eligible' : 'Warning'}</span>
+                <p class="text-xs text-muted" style="margin-top: 0.2rem;">
+                  ${isSafe
+                    ? `Can miss ${projection.safeBunks} more class(es)`
+                    : `Must attend next ${projection.classesNeeded} class(es)`}
+                </p>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = rows;
+      } catch (e) {
+        console.error(e);
+        showToast("Error loading attendance", "danger");
+      }
+    }
+
+    function updateCalculatorProjection() {
+      const attended = Number(document.getElementById("calcAttendedInput").value) || 0;
+      const total = Number(document.getElementById("calcTotalInput").value) || 1;
+
+      const proj = AttendanceService.calculateProjection(attended, total, 75);
+      const box = document.getElementById("calcResultBox");
+      const title = document.getElementById("calcResultTitle");
+      const msg = document.getElementById("calcResultMessage");
+
+      if (proj.isEligible) {
+        box.style.borderLeftColor = "var(--success)";
+        title.innerHTML = `<span class="badge badge-success">✓ Eligible (${proj.currentPercentage}%)</span>`;
+        msg.textContent = proj.message;
+      } else {
+        box.style.borderLeftColor = "var(--danger)";
+        title.innerHTML = `<span class="badge badge-danger">⚠ Shortage Alert (${proj.currentPercentage}%)</span>`;
+        msg.textContent = proj.message;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadAttendanceData();
+      document.getElementById("calcAttendedInput").addEventListener("input", updateCalculatorProjection);
+      document.getElementById("calcTotalInput").addEventListener("input", updateCalculatorProjection);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Moderation — CampusX Admin</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Directory Management</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="users.html" class="nav-link"><i>👥</i> <span>All Users</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👨‍🎓</i> <span>Students</span></a></li>
+            <li><a href="teachers.html" class="nav-link"><i>👨‍🏫</i> <span>Faculty</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Curriculum & Campus</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="departments.html" class="nav-link"><i>🏛️</i> <span>Departments</span></a></li>
+            <li><a href="subjects.html" class="nav-link"><i>📖</i> <span>Subjects</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="content.html" class="nav-link active"><i>📁</i> <span>Content Moderation</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Administration</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="settings.html" class="nav-link"><i>⚙️</i> <span>Platform Settings</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Institution Content Moderation</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #ef4444, #dc2626);">AD</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Admin</span>
+              <span class="user-role-badge">ADMIN</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchContentTab('notes', this)">All Notes</button>
+          <button class="tab-btn" onclick="switchContentTab('assignments', this)">All Assignments</button>
+          <button class="tab-btn" onclick="switchContentTab('notices', this)">All Notices</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead id="contentTableHead">
+              <tr>
+                <th>Title</th>
+                <th>Subject / Context</th>
+                <th>Author</th>
+                <th>Date / Deadline</th>
+                <th>Attachment</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="contentTableBody">
+              <tr><td colspan="6" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Admin View Submissions Modal -->
+  <div class="modal-overlay" id="adminSubmissionsModal">
+    <div class="modal" style="max-width: 760px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="adminSubmissionsModalTitle">Student Submissions</h3>
+        <button class="btn-icon" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Roll No</th>
+                <th>Submitted On</th>
+                <th>Solution File & Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="adminSubmissionsTableBody">
+              <tr><td colspan="4" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <!-- Supabase JS Client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/notes.js"></script>
+  <script src="../js/assignments.js"></script>
+  <script src="../js/notices.js"></script>
+
+  <script>
+    let activeTab = "notes";
+    let _cachedAssignments = [];
+
+    async function loadContent() {
+      const tbody = document.getElementById("contentTableBody");
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>`;
+
+      try {
+        if (activeTab === "notes") {
+          const notes = await NotesService.getNotes();
+          tbody.innerHTML = notes.map(n => `
+            <tr>
+              <td class="font-semibold">${sanitizeHtml(n.title)}</td>
+              <td><span class="badge badge-primary">${sanitizeHtml(n.subjectName)}</span></td>
+              <td>${sanitizeHtml(n.teacherName)}</td>
+              <td class="text-xs text-muted">${formatDate(n.createdAt)}</td>
+              <td>
+                ${n.storagePath ? `
+                  <button type="button" onclick="NotesService.viewNote('${n.id}')" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:0.2rem 0.5rem;">
+                    👁️ View
+                  </button>
+                ` : `<span class="text-xs text-muted">None</span>`}
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn btn-danger btn-sm" onclick="adminDelete('notes', '${n.id}')">Delete</button>
+              </td>
+            </tr>
+          `).join("") || `<tr><td colspan="6" style="text-align: center; padding: 2rem;">No notes available.</td></tr>`;
+        } else if (activeTab === "assignments") {
+          _cachedAssignments = await AssignmentsService.getAssignments();
+          tbody.innerHTML = _cachedAssignments.map(a => {
+            const hasFile = !!(a.storagePath || a.attachmentUrl);
+            const target = `${a.department && a.department !== 'all' ? a.department : 'All Depts'} • Sem ${a.semester || 'All'}`;
+            return `
+              <tr>
+                <td class="font-semibold">${sanitizeHtml(a.title)}</td>
+                <td>
+                  <span class="badge badge-secondary">${sanitizeHtml(a.subjectName)}</span>
+                  <div class="text-xs text-muted" style="margin-top:0.2rem;">${sanitizeHtml(target)}</div>
+                </td>
+                <td>${sanitizeHtml(a.teacherName)}</td>
+                <td class="text-xs text-muted">${formatDate(a.deadline)}</td>
+                <td>
+                  ${hasFile ? `
+                    <button type="button" onclick="adminViewAssignmentDoc('${a.id}')" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:0.2rem 0.5rem;">
+                      👁️ View
+                    </button>
+                  ` : `<span class="text-xs text-muted">None</span>`}
+                </td>
+                <td style="text-align: right;">
+                  <div style="display:inline-flex; gap:0.35rem;">
+                    <button class="btn btn-primary btn-sm" onclick="openAdminSubmissionsModal('${a.id}', '${sanitizeHtml(a.title)}')">
+                      👥 Submissions
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="adminDelete('assignments', '${a.id}')">
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join("") || `<tr><td colspan="6" style="text-align: center; padding: 2rem;">No assignments found.</td></tr>`;
+        } else if (activeTab === "notices") {
+          const notices = await NoticesService.getNotices();
+          tbody.innerHTML = notices.map(n => `
+            <tr>
+              <td class="font-semibold">${sanitizeHtml(n.title)}</td>
+              <td><span class="badge badge-warning">${sanitizeHtml(n.departmentName || "All")}</span></td>
+              <td>${sanitizeHtml(n.createdBy)}</td>
+              <td class="text-xs text-muted">${formatDate(n.createdAt)}</td>
+              <td>
+                ${n.storagePath ? `
+                  <button type="button" onclick="NoticesService.viewAttachment('${n.id}')" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:0.2rem 0.5rem;">
+                    👁️ View
+                  </button>
+                ` : `<span class="text-xs text-muted">None</span>`}
+              </td>
+              <td style="text-align: right;">
+                <button class="btn btn-danger btn-sm" onclick="adminDelete('notices', '${n.id}')">Delete</button>
+              </td>
+            </tr>
+          `).join("") || `<tr><td colspan="6" style="text-align: center; padding: 2rem;">No notices found.</td></tr>`;
+        }
+      } catch (e) {
+        console.error(e);
+        showToast("Error loading content", "danger");
+      }
+    }
+
+    async function adminViewAssignmentDoc(id) {
+      const a = _cachedAssignments.find(x => x.id === id);
+      if (!a) return;
+      try {
+        await AssignmentsService.viewAttachment(a.storagePath, a.attachmentUrl);
+      } catch (e) {
+        showToast(e.message || "Failed to open document", "danger");
+      }
+    }
+
+    async function openAdminSubmissionsModal(assignId, title) {
+      document.getElementById("adminSubmissionsModalTitle").textContent = `Submissions: ${title}`;
+      openModal("adminSubmissionsModal");
+      const tbody = document.getElementById("adminSubmissionsTableBody");
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>`;
+
+      try {
+        const subs = await AssignmentsService.getSubmissionsForAssignment(assignId);
+        if (subs.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem;" class="text-muted">No student submissions recorded for this assignment.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = subs.map(s => `
+          <tr>
+            <td class="font-semibold">${sanitizeHtml(s.studentName || "Student")}</td>
+            <td class="text-xs">${sanitizeHtml(s.studentRoll || "—")}</td>
+            <td class="text-xs text-muted">${formatDateTime(s.submittedAt || s.updatedAt)}</td>
+            <td>
+              <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                <span class="text-xs font-semibold">${sanitizeHtml(s.fileName || "Solution")}</span>
+                <div style="display:inline-flex; gap:0.35rem;">
+                  <button type="button" onclick="AssignmentsService.viewSubmission('${s.storagePath || ''}', '${s.fileUrl || ''}')" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:0.2rem 0.45rem;">
+                    👁️ View
+                  </button>
+                  <button type="button" onclick="AssignmentsService.downloadSubmission('${s.storagePath || ''}', '${s.fileName || 'Solution'}', '${s.fileUrl || ''}')" class="btn btn-primary btn-sm" style="font-size:0.75rem; padding:0.2rem 0.45rem;">
+                    ⬇️ Download
+                  </button>
+                </div>
+                ${s.comment ? `<p class="text-xs text-muted"><em>"${sanitizeHtml(s.comment)}"</em></p>` : ''}
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      } catch (e) {
+        console.error(e);
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger);">Failed to load submissions.</td></tr>`;
+      }
+    }
+
+    function switchContentTab(tab, btn) {
+      activeTab = tab;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+      loadContent();
+    }
+
+    function adminDelete(collectionName, id) {
+      confirmDialog({
+        title: "Admin Moderation Delete",
+        message: `Are you sure you want to permanently delete this resource from ${collectionName}?`,
+        confirmText: "Delete Resource",
+        onConfirm: async () => {
+          try {
+            if (collectionName === "notes") {
+              await NotesService.deleteNote(id);
+            } else if (collectionName === "assignments") {
+              await AssignmentsService.deleteAssignment(id);
+            } else if (collectionName === "notices") {
+              await NoticesService.deleteNotice(id);
+            } else {
+              await window.db.collection(collectionName).doc(id).delete();
+            }
+            showToast("Resource removed by administrator", "success");
+            await loadContent();
+          } catch (e) {
+            showToast("Failed to delete", "danger");
+          }
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadContent);
+  </script>
+</body>
+</html>

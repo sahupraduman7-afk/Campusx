@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Planner & Pomodoro — CampusX</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Academics</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Study Notes</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="exams.html" class="nav-link"><i>🎓</i> <span>Exams</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Campus & Alerts</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+            <li><a href="notifications.html" class="nav-link"><i>🔔</i> <span>Notifications</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Productivity</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="planner.html" class="nav-link active"><i>⏱️</i> <span>Planner & Pomodoro</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Study Planner & Productivity Timer</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay">ST</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Student Name</span>
+              <span class="user-role-badge">STUDENT</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.75rem; align-items: start;">
+          <!-- Left Column: Pomodoro Timer -->
+          <div class="card" style="text-align: center;">
+            <div class="card-header" style="justify-content: center;">
+              <span class="badge badge-primary" id="pomoModeBadge" style="font-size: 0.8125rem; padding: 0.35rem 0.85rem;">
+                🎯 Focus Session (25 Min)
+              </span>
+            </div>
+
+            <!-- Mode Selector Buttons -->
+            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <button class="btn btn-primary btn-sm" id="btnModeFocus" onclick="setTimerMode('focus')">Focus (25m)</button>
+              <button class="btn btn-secondary btn-sm" id="btnModeShort" onclick="setTimerMode('shortBreak')">Short Break (5m)</button>
+              <button class="btn btn-secondary btn-sm" id="btnModeLong" onclick="setTimerMode('longBreak')">Long Break (15m)</button>
+            </div>
+
+            <!-- Timer Countdown Dial -->
+            <div class="pomodoro-dial-wrap">
+              <div class="pomodoro-time-display" id="pomoTimerDisplay">25:00</div>
+              
+              <div class="pomodoro-controls">
+                <button class="btn btn-primary btn-lg" id="pomoStartBtn" onclick="togglePomodoro()">
+                  ▶ Start Focus
+                </button>
+                <button class="btn btn-secondary btn-lg" onclick="resetPomodoro()">
+                  ↺ Reset
+                </button>
+                <button class="btn btn-secondary btn-lg" onclick="skipPomodoro()">
+                  ⏭ Skip
+                </button>
+              </div>
+            </div>
+
+            <!-- Session Stats -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div>
+                <span class="text-xs text-muted" style="text-transform: uppercase;">Completed Sessions</span>
+                <h4 style="font-size: 1.25rem; color: var(--primary);" id="pomoSessionCount">0</h4>
+              </div>
+              <div>
+                <span class="text-xs text-muted" style="text-transform: uppercase;">Total Study Time</span>
+                <h4 style="font-size: 1.25rem; color: var(--success);" id="pomoTotalTime">0 hrs</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Personal Study Tasks (Stored locally) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📝 Personal Study Tasks</h3>
+                <p class="card-subtitle">Private planner saved on your device</p>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openModal('addTaskModal')">+ Add Task</button>
+            </div>
+
+            <!-- Task List -->
+            <div id="taskListContainer" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="skeleton skeleton-card" style="height: 80px;"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Task Modal -->
+  <div class="modal-overlay" id="addTaskModal">
+    <div class="modal" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Study Task</h3>
+        <button class="btn-icon" data-close-modal>&times;</button>
+      </div>
+      <form id="addTaskForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Task Title <span class="required">*</span></label>
+            <input type="text" id="taskTitleInput" class="form-control" placeholder="e.g. Revise Binary Search Trees" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Academic Subject</label>
+            <input type="text" id="taskSubjectInput" class="form-control" placeholder="e.g. C Programming">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" id="taskDueDateInput" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select id="taskPriorityInput" class="form-control form-select">
+                <option value="normal">Normal</option>
+                <option value="important">Important</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/planner.js"></script>
+
+  <script>
+    // Pomodoro Controller
+    let pomoState;
+
+    function initTimer() {
+      pomoState = PlannerService.initPomodoro({
+        onTick: (formattedTime, state) => {
+          document.getElementById("pomoTimerDisplay").textContent = formattedTime;
+        },
+        onComplete: (msg, nextMode) => {
+          showToast(msg, "success", 5000);
+          updateSessionStats();
+        },
+        onModeChange: (mode, modeData) => {
+          updateModeButtons(mode);
+          document.getElementById("pomoModeBadge").textContent = `🎯 ${modeData.label}`;
+          document.getElementById("pomoStartBtn").textContent = "▶ Start";
+        }
+      });
+      updateSessionStats();
+    }
+
+    function togglePomodoro() {
+      const btn = document.getElementById("pomoStartBtn");
+      if (pomoState.isRunning) {
+        PlannerService.pauseTimer();
+        btn.textContent = "▶ Resume";
+      } else {
+        PlannerService.startTimer();
+        btn.textContent = "⏸ Pause";
+      }
+    }
+
+    function resetPomodoro() {
+      PlannerService.resetTimer();
+      document.getElementById("pomoStartBtn").textContent = "▶ Start";
+    }
+
+    function skipPomodoro() {
+      PlannerService.skipTimer();
+      document.getElementById("pomoStartBtn").textContent = "▶ Start";
+    }
+
+    function setTimerMode(mode) {
+      PlannerService.switchMode(mode);
+    }
+
+    function updateModeButtons(mode) {
+      document.getElementById("btnModeFocus").className = mode === "focus" ? "btn btn-primary btn-sm" : "btn btn-secondary btn-sm";
+      document.getElementById("btnModeShort").className = mode === "shortBreak" ? "btn btn-primary btn-sm" : "btn btn-secondary btn-sm";
+      document.getElementById("btnModeLong").className = mode === "longBreak" ? "btn btn-primary btn-sm" : "btn btn-secondary btn-sm";
+    }
+
+    function updateSessionStats() {
+      const stats = PlannerService.getPomoStats();
+      document.getElementById("pomoSessionCount").textContent = stats.sessionCount;
+      document.getElementById("pomoTotalTime").textContent = `${(stats.totalMinutesFocused / 60).toFixed(1)} hrs`;
+    }
+
+    // Task List Controller
+    function renderTasks() {
+      const container = document.getElementById("taskListContainer");
+      const tasks = PlannerService.getTasks();
+
+      if (tasks.length === 0) {
+        renderEmptyState(container, {
+          icon: "📝",
+          title: "No Study Tasks",
+          message: "Add tasks to organize your study goals for today."
+        });
+        return;
+      }
+
+      let html = "";
+      tasks.forEach(t => {
+        const pBadge = t.priority === "urgent" ? "badge-danger" : (t.priority === "important" ? "badge-warning" : "badge-secondary");
+        html += `
+          <div style="padding: 0.875rem; border: 1px solid var(--border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; background-color: var(--surface);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTaskDone('${t.id}')" style="width: 18px; height: 18px; cursor: pointer;">
+              <div>
+                <span style="font-size: 0.9375rem; font-weight: 600; text-decoration: ${t.completed ? 'line-through' : 'none'}; color: ${t.completed ? 'var(--text-muted)' : 'var(--text-main)'};">
+                  ${sanitizeHtml(t.title)}
+                </span>
+                <p class="text-xs text-muted" style="margin-top: 0.15rem;">${sanitizeHtml(t.subject)} • Due ${formatDate(t.dueDate)}</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="badge ${pBadge}" style="font-size: 0.65rem; text-transform: uppercase;">${t.priority}</span>
+              <button class="btn-icon" onclick="deleteTaskItem('${t.id}')" title="Delete Task" style="color: var(--danger);">&times;</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function toggleTaskDone(id) {
+      PlannerService.toggleTask(id);
+      renderTasks();
+    }
+
+    function deleteTaskItem(id) {
+      PlannerService.deleteTask(id);
+      renderTasks();
+      showToast("Task removed", "info", 1500);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initTimer();
+      renderTasks();
+
+      document.getElementById("addTaskForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = document.getElementById("taskTitleInput").value.trim();
+        const subject = document.getElementById("taskSubjectInput").value.trim();
+        const dueDate = document.getElementById("taskDueDateInput").value;
+        const priority = document.getElementById("taskPriorityInput").value;
+
+        PlannerService.addTask({ title, subject, dueDate, priority });
+        showToast("Task added to your study planner!", "success");
+        closeModal("addTaskModal");
+        document.getElementById("addTaskForm").reset();
+        renderTasks();
+      });
+    });
+  </script>
+</body>
+</html>

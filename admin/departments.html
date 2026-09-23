@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Departments — CampusX Admin</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li><a href="dashboard.html" class="nav-link"><i>📊</i> <span>Dashboard</span></a></li>
+        </ul>
+        <div>
+          <div class="sidebar-section-title">Directory Management</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="users.html" class="nav-link"><i>👥</i> <span>All Users</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👨‍🎓</i> <span>Students</span></a></li>
+            <li><a href="teachers.html" class="nav-link"><i>👨‍🏫</i> <span>Faculty</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Curriculum & Campus</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="departments.html" class="nav-link active"><i>🏛️</i> <span>Departments</span></a></li>
+            <li><a href="subjects.html" class="nav-link"><i>📖</i> <span>Subjects</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>Timetable</span></a></li>
+            <li><a href="content.html" class="nav-link"><i>📁</i> <span>Content Moderation</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sidebar-section-title">Administration</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="settings.html" class="nav-link"><i>⚙️</i> <span>Platform Settings</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Academic Departments</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #ef4444, #dc2626);">AD</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Admin</span>
+              <span class="user-role-badge">ADMIN</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 class="card-title">College Departments</h3>
+              <p class="card-subtitle">Manage faculties, departmental heads, and academic branches</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('addDeptModal')">+ Add Department</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Department Name</th>
+                <th>Code</th>
+                <th>Head of Department (HOD)</th>
+                <th>Enrolled Intake</th>
+              </tr>
+            </thead>
+            <tbody id="deptTableBody">
+              <tr><td colspan="4" style="text-align: center;"><div class="skeleton skeleton-text"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Department Modal -->
+  <div class="modal-overlay" id="addDeptModal">
+    <div class="modal" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Academic Department</h3>
+        <button class="btn-icon" data-close-modal>&times;</button>
+      </div>
+      <form id="addDeptForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Department Name <span class="required">*</span></label>
+            <input type="text" id="deptNameInput" class="form-control" placeholder="e.g. Civil Engineering" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Code / Abbreviation <span class="required">*</span></label>
+            <input type="text" id="deptCodeInput" class="form-control" placeholder="e.g. CE" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Head of Department (HOD)</label>
+            <input type="text" id="deptHeadInput" class="form-control" placeholder="e.g. Dr. A. K. Sen">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Annual Intake Capacity</label>
+            <input type="number" id="deptCapacityInput" class="form-control" value="120">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Department</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+
+  <script>
+    async function loadDepartments() {
+      const tbody = document.getElementById("deptTableBody");
+      try {
+        const snap = await window.db.collection("departments").get();
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 1.5rem 0; color: var(--text-muted);">No departments configured yet. Click "Add Department" to create one.</td></tr>`;
+          return;
+        }
+
+        let html = "";
+        list.forEach(d => {
+          html += `
+            <tr>
+              <td class="font-semibold">${sanitizeHtml(d.name)}</td>
+              <td><span class="badge badge-primary">${sanitizeHtml(d.code)}</span></td>
+              <td>${sanitizeHtml(d.head || "Appointed HOD")}</td>
+              <td>${d.totalStudents || 0} Students</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (e) {
+        showToast("Error loading departments", "danger");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDepartments();
+
+      document.getElementById("addDeptForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("deptNameInput").value.trim();
+        const code = document.getElementById("deptCodeInput").value.trim();
+        const head = document.getElementById("deptHeadInput").value.trim();
+        const totalStudents = Number(document.getElementById("deptCapacityInput").value) || 120;
+
+        try {
+          const newDept = {
+            id: "dept_" + code.toLowerCase(),
+            name,
+            code,
+            head,
+            totalStudents
+          };
+          await window.db.collection("departments").doc(newDept.id).set(newDept);
+          showToast("Department created successfully!", "success");
+          closeModal("addDeptModal");
+          document.getElementById("addDeptForm").reset();
+          loadDepartments();
+        } catch (err) {
+          showToast(err.message || "Failed to create department", "danger");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

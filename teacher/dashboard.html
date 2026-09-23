@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Dashboard — CampusX</title>
+
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">CX</div>
+          <span class="sidebar-brand-text">Campus<span>X</span></span>
+        </div>
+      </div>
+
+      <div class="sidebar-menu">
+        <ul class="sidebar-nav-list">
+          <li>
+            <a href="dashboard.html" class="nav-link active">
+              <i>📊</i> <span>Dashboard</span>
+            </a>
+          </li>
+        </ul>
+
+        <div>
+          <div class="sidebar-section-title">Academic Content</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notes.html" class="nav-link"><i>📚</i> <span>Notes Manager</span></a></li>
+            <li><a href="assignments.html" class="nav-link"><i>📝</i> <span>Assignments</span></a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sidebar-section-title">Communication</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="notices.html" class="nav-link"><i>📢</i> <span>Notices</span></a></li>
+            <li><a href="circulars.html" class="nav-link"><i>📜</i> <span>Circulars</span></a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sidebar-section-title">Classroom</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="attendance.html" class="nav-link"><i>📈</i> <span>Attendance</span></a></li>
+            <li><a href="timetable.html" class="nav-link"><i>📅</i> <span>My Schedule</span></a></li>
+            <li><a href="students.html" class="nav-link"><i>👥</i> <span>Students Roster</span></a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sidebar-section-title">Account</div>
+          <ul class="sidebar-nav-list">
+            <li><a href="profile.html" class="nav-link"><i>👤</i> <span>Profile</span></a></li>
+            <li><a href="javascript:void(0)" class="nav-link logout-btn"><i>🚪</i> <span>Sign Out</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <span class="text-xs text-muted">CampusX Faculty Portal v2.0</span>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle">☰</button>
+          <div class="page-title-wrap">
+            <h1>Faculty Portal Overview</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle"><span class="theme-toggle-icon">🌙</span></button>
+          <div class="user-profile-menu">
+            <div class="user-avatar" id="userAvatarDisplay" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+            <div class="user-info">
+              <span class="user-name" id="userNameDisplay">Faculty</span>
+              <span class="user-role-badge">TEACHER</span>
+            </div>
+            <div class="user-dropdown">
+              <a href="profile.html" class="user-dropdown-item">👤 Profile</a>
+              <a href="notes.html" class="user-dropdown-item">📚 Upload Notes</a>
+              <div class="user-dropdown-divider"></div>
+              <a href="javascript:void(0)" class="user-dropdown-item logout-btn" style="color: var(--danger);">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner" style="background: linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%);">
+          <div class="welcome-text">
+            <h2>Welcome, Professor 👋</h2>
+            <p>Publish lectures, review submitted assignments, broadcast announcements, and monitor student academic performance.</p>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap primary">📚</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="teacherNotesCount">--</span>
+              <span class="kpi-label">Uploaded Notes</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap warning">📝</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="teacherAssignmentsCount">--</span>
+              <span class="kpi-label">Active Assignments</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap secondary">📢</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="teacherNoticesCount">--</span>
+              <span class="kpi-label">Published Notices</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap success">👥</div>
+            <div class="kpi-details">
+              <span class="kpi-value" id="teacherStudentsCount">--</span>
+              <span class="kpi-label">Total Enrolled Students</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions & Recent Content -->
+        <div class="dashboard-grid">
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📋 Recently Published Academic Material</h3>
+                <p class="card-subtitle">Lecture notes & assignments created by you</p>
+              </div>
+              <a href="notes.html" class="btn btn-outline btn-sm">Manage All →</a>
+            </div>
+            <div id="teacherRecentActivityTable">
+              <div class="skeleton skeleton-card" style="height: 120px;"></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Grid -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">⚡ Quick Academic Actions</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <a href="notes.html?action=new" class="btn btn-primary w-full" style="justify-content: flex-start;">
+                <span>📚 Upload New Study Note (Required File)</span>
+              </a>
+              <a href="assignments.html?action=new" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>📝 Create Assignment (Optional Attachment)</span>
+              </a>
+              <a href="notices.html?action=new" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>📢 Post College / Dept Notice</span>
+              </a>
+              <a href="circulars.html?action=new" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>📜 Issue Official Circular</span>
+              </a>
+              <a href="timetable.html" class="btn btn-secondary w-full" style="justify-content: flex-start;">
+                <span>📅 View My Teaching Schedule</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <!-- Supabase JS Client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-config.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/guards.js"></script>
+  <script src="../js/notes.js"></script>
+  <script src="../js/assignments.js"></script>
+  <script src="../js/notices.js"></script>
+  <script src="../js/teacher.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      TeacherController.initDashboard();
+    });
+  </script>
+</body>
+</html>
