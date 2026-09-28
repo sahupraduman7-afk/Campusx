@@ -4,7 +4,6 @@
 
 [![CampusX Live Web Application](https://img.shields.io/badge/Live%20Demo-Vercel%20Deployment-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://sahupraduman7-afk.github.io/Campusx/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Web%20(Desktop%20%26%20Mobile)-orange?style=for-the-badge)](https://campusx-7cxs-esdg6sqbw-self-coders.vercel.app/)
 
 ---
 
@@ -16,7 +15,7 @@ Built using semantic HTML5 (HyperText Markup Language 5), modern CSS3 (Cascading
 - **Google Firebase**: Provides user identity management via Firebase Authentication (Email/Password and Google OAuth 2.0 Open Authorization) and structured NoSQL application metadata through Cloud Firestore.
 - **Supabase Storage**: Provides secure, private object storage for all academic files (study notes, assignments, student submissions, notices, and circulars) inside an authenticated, non-public storage bucket (`campusx-files`).
 
-The live application is deployed on Vercel: **[https://campusx-7cxs-esdg6sqbw-self-coders.vercel.app/](https://campusx-7cxs-esdg6sqbw-self-coders.vercel.app/)**
+The live application is deployed on github: **[https://sahupraduman7-afk.github.io/Campusx/](https://sahupraduman7-afk.github.io/Campusx/)**
 
 ---
 
