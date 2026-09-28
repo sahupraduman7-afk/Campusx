@@ -2,7 +2,7 @@
 
 > **"One Campus. One Platform. Everything Students Need."**
 
-[![CampusX Live Web Application](https://img.shields.io/badge/Live%20Demo-Vercel%20Deployment-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://campusx-7cxs-esdg6sqbw-self-coders.vercel.app/)
+[![CampusX Live Web Application](https://img.shields.io/badge/Live%20Demo-Vercel%20Deployment-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://sahupraduman7-afk.github.io/Campusx/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Web%20(Desktop%20%26%20Mobile)-orange?style=for-the-badge)](https://campusx-7cxs-esdg6sqbw-self-coders.vercel.app/)
 
